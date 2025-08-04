@@ -1,0 +1,44 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database files (if any)
+*.sql
+*.db
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Uploaded files (optional - remove if you want to include user uploads)
+app/uploads/*
+!app/uploads/.gitkeep
+
+# Cache files
+cache/
+*.cache
+
+# Backup files
+*.bak
+*.backup 
