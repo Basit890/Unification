@@ -95,4 +95,14 @@ class User {
         $stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
         return $stmt->execute([$id]);
     }
+    
+    public function makeAdmin($id) {
+        $stmt = $this->db->prepare("UPDATE users SET is_admin = 1, user_type = 'admin' WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+    
+    public function removeAdmin($id) {
+        $stmt = $this->db->prepare("UPDATE users SET is_admin = 0, user_type = 'donor' WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
 } 

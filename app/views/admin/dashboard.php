@@ -28,7 +28,7 @@ $tab = $_GET['tab'] ?? 'overview';
 <div class="admin-container">
     <!-- Admin Header -->
     <div class="admin-header">
-        <h1>📊 Admin Dashboard</h1>
+        <h1>Admin Dashboard</h1>
         <p>Manage your crowdfunding platform</p>
     </div>
 
@@ -112,36 +112,39 @@ $tab = $_GET['tab'] ?? 'overview';
     </div>
 </div>
 
-    <style>
-        [data-theme="dark"] .admin-header,
-        [data-theme="dark"] .stat-card,
-        [data-theme="dark"] .admin-tabs,
-        [data-theme="dark"] .tab-content {
-            background: #1e1e2e !important;
-            border-color: rgba(255,255,255,0.1) !important;
-            color: #ffffff !important;
-        }
-        
-        [data-theme="dark"] .admin-header h1,
-        [data-theme="dark"] .admin-header p,
-        [data-theme="dark"] .stat-label {
-            color: #ffffff !important;
-        }
-        
-        [data-theme="dark"] .stat-number {
-            color: #667eea !important;
-        }
-        
-        [data-theme="dark"] .admin-tab {
-            color: #b0b0b0 !important;
-        }
-        
-        [data-theme="dark"] .admin-tab.active,
-        [data-theme="dark"] .admin-tab:hover {
-            color: #667eea !important;
-            background: rgba(102, 126, 234, 0.1) !important;
-        }
-        
+<style>
+/* Admin Dashboard Styles */
+.admin-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.admin-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.admin-header p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin: 0;
+}
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -150,13 +153,13 @@ $tab = $_GET['tab'] ?? 'overview';
 }
 
 .stat-card {
-    background: white;
+    background: var(--card-bg);
     padding: 2rem;
     border-radius: 16px;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow);
     transition: all 0.3s ease;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
 }
@@ -168,7 +171,7 @@ $tab = $_GET['tab'] ?? 'overview';
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--accent-gradient);
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
 }
 
 .stat-card:hover {
@@ -181,26 +184,115 @@ $tab = $_GET['tab'] ?? 'overview';
     margin-bottom: 1rem;
 }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 0.5rem;
-        }
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
 
-        .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+.stat-label {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.admin-tab {
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    color: var(--text-light);
+    background: transparent;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    font-weight: 500;
+}
+
+.admin-tab:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--accent-color);
+    border-color: rgba(102, 126, 234, 0.2);
+}
+
+.admin-tab.active {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
 
 .tab-content {
-    background: white;
+    background: var(--card-bg);
     border-radius: 16px;
     padding: 2.5rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    border: 1px solid #e0e0e0;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
 }
+
+/* Dark theme overrides */
+[data-theme="dark"] .admin-header,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .admin-tabs,
+[data-theme="dark"] .tab-content {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .admin-header h1,
+[data-theme="dark"] .admin-header p,
+[data-theme="dark"] .stat-label {
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .stat-number {
+    color: var(--accent-color);
+}
+
+[data-theme="dark"] .admin-tab {
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .admin-tab.active,
+[data-theme="dark"] .admin-tab:hover {
+    color: var(--accent-color);
+    background: rgba(102, 126, 234, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 1rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-tabs {
+        flex-direction: column;
+    }
+    
+    .admin-tab {
+        text-align: center;
+    }
+    
+    .tab-content {
+        padding: 1.5rem;
+    }
+}
+</style>
 

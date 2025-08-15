@@ -6,20 +6,32 @@ $filters = [
     'category' => $category_filter,
     'sort' => $sort_by
 ];
+
+// Get all approved requests first
+$allRequests = $helpRequestController->getApprovedRequests([]);
 $requests = $helpRequestController->getApprovedRequests($filters);
 $categories = $helpRequestController->getCategories();
 
 $topDonors = $donationController->getTopDonors(5);
+
+// Check if current category has any posts
+$categoryHasPosts = true;
+if ($category_filter && !empty($category_filter)) {
+    $categoryRequests = array_filter($allRequests, function($req) use ($category_filter) {
+        return $req['category'] === $category_filter;
+    });
+    $categoryHasPosts = !empty($categoryRequests);
+}
 ?>
 
 <div style="text-align: center; margin-bottom: 3rem;">
-    <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Welcome to Community Help</h1>
+    <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Welcome to Community Help</h1>
     <p style="font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto;">Help others achieve their goals or get support for your own cause. Together, we can make a difference!</p>
     
     <!-- Quick Stats -->
     <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;">
         <div style="text-align: center; padding: 1rem;">
-            <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);"><?php echo count($requests); ?></div>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);"><?php echo count($allRequests); ?></div>
             <div style="color: var(--text-light);">Active Campaigns</div>
         </div>
         <div style="text-align: center; padding: 1rem;">
@@ -108,12 +120,27 @@ $topDonors = $donationController->getTopDonors(5);
     </div>
 </div>
 
-<?php if (empty($requests)): ?>
+<?php if (empty($requests) || (!$categoryHasPosts && $category_filter)): ?>
     <div style="text-align: center; padding: 3rem;">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">🎯</div>
-        <h3 style="margin-bottom: 1rem;">No campaigns found</h3>
+        <div style="font-size: 4rem; margin-bottom: 1rem;">
+            <?php if (!$categoryHasPosts && $category_filter): ?>
+                🔍
+            <?php else: ?>
+                🎯
+            <?php endif; ?>
+        </div>
+        <h3 style="margin-bottom: 1rem;">
+            <?php if (!$categoryHasPosts && $category_filter): ?>
+                No campaigns found in this category
+            <?php else: ?>
+                No campaigns found
+            <?php endif; ?>
+        </h3>
         <p style="color: var(--text-light); margin-bottom: 2rem;">
-            <?php if (Session::isLoggedIn()): ?>
+            <?php if (!$categoryHasPosts && $category_filter): ?>
+                There are currently no fundraising campaigns in the <strong><?php echo htmlspecialchars($categories[$category_filter] ?? $category_filter); ?></strong> category.
+                <br>Try selecting a different category or browse all campaigns.
+            <?php elseif (Session::isLoggedIn()): ?>
                 <?php 
                 $user = $userModel->findById(Session::getUserId());
                 if ($user['user_type'] === 'fundraiser' || $user['user_type'] === 'admin'): ?>
@@ -125,19 +152,24 @@ $topDonors = $donationController->getTopDonors(5);
                 Be the first to create a campaign and make a difference!
             <?php endif; ?>
         </p>
-        <?php if (Session::isLoggedIn()): ?>
-            <?php if ($user['user_type'] === 'fundraiser' || $user['user_type'] === 'admin'): ?>
-                <a href="index.php?page=create_request" class="btn">Create Your First Campaign</a>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <?php if (!$categoryHasPosts && $category_filter): ?>
+                <a href="index.php" class="btn btn-secondary">View All Categories</a>
             <?php endif; ?>
-        <?php else: ?>
-            <a href="index.php?page=register" class="btn">Join Our Community</a>
-        <?php endif; ?>
+            <?php if (Session::isLoggedIn()): ?>
+                <?php if ($user['user_type'] === 'fundraiser' || $user['user_type'] === 'admin'): ?>
+                    <a href="index.php?page=create_request" class="btn">Create Your First Campaign</a>
+                <?php endif; ?>
+            <?php else: ?>
+                <a href="index.php?page=register" class="btn">Join Our Community</a>
+            <?php endif; ?>
+        </div>
     </div>
 <?php else: ?>
     <div class="grid" id="campaigns-grid">
         <?php foreach ($requests as $request): ?>
             <div class="card campaign-card" data-category="<?php echo htmlspecialchars($request['category']); ?>" data-search="<?php echo htmlspecialchars(strtolower($request['title'] . ' ' . $request['description'] . ' ' . $request['user_name'])); ?>">
-                <?php if ($request['image_path']): ?>
+                <?php if ($request['image_path'] && file_exists($request['image_path'])): ?>
                     <img src="<?php echo htmlspecialchars($request['image_path']); ?>" alt="Request Image" class="request-image" loading="lazy">
                 <?php else: ?>
                     <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; margin-bottom: 1rem;">🎯</div>
@@ -172,7 +204,7 @@ $topDonors = $donationController->getTopDonors(5);
                     
                     <div class="campaign-actions">
                         <a href="index.php?page=view_request&id=<?php echo $request['id']; ?>" class="btn" style="flex: 1; text-align: center;">View Details</a>
-                        <button class="btn btn-secondary" onclick="shareCampaign(<?php echo $request['id']; ?>)" style="padding: 12px;" data-tooltip="Share this campaign">
+                        <button class="btn btn-secondary" onclick="shareCampaign(<?php echo $request['id']; ?>)" style="padding: 12px; margin-left: 0.5rem;" data-tooltip="Share this campaign">
                             📤
                         </button>
                     </div>
@@ -183,7 +215,10 @@ $topDonors = $donationController->getTopDonors(5);
     
     <!-- Campaign count -->
     <div style="text-align: center; margin-top: 2rem; color: var(--text-light);">
-        Showing <span id="campaign-count"><?php echo count($requests); ?></span> of <?php echo count($requests); ?> campaigns
+        Showing <span id="campaign-count"><?php echo count($requests); ?></span> of <?php echo count($allRequests); ?> campaigns
+        <?php if ($category_filter): ?>
+            in <strong><?php echo htmlspecialchars($categories[$category_filter] ?? $category_filter); ?></strong> category
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 
@@ -336,4 +371,8 @@ style.textContent = `
         .list-view .campaign-actions {
             justify-content: center;
         }
+    }
+`;
+document.head.appendChild(style);
+</script>
         

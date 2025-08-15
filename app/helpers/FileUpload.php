@@ -102,10 +102,12 @@ class FileUpload {
         $filepath = $this->uploadDir . $filename;
         
         if (move_uploaded_file($file['tmp_name'], $filepath)) {
+            // Return relative path for web access instead of absolute server path
+            $relativePath = 'app/uploads/' . $filename;
             return [
                 'success' => true,
                 'filename' => $filename,
-                'filepath' => $filepath,
+                'filepath' => $relativePath,
                 'original_name' => $file['name']
             ];
         } else {

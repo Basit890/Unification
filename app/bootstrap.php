@@ -119,6 +119,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             break;
             
+        case 'make_admin':
+            if (Session::isAdmin()) {
+                $result = $userModel->makeAdmin($_POST['user_id']);
+                if ($result) {
+                    $result = ['success' => true, 'message' => 'User has been made an admin successfully!'];
+                } else {
+                    $result = ['success' => false, 'message' => 'Failed to make user admin.'];
+                }
+            } else {
+                $result = ['success' => false, 'message' => 'Access denied'];
+            }
+            break;
+            
+        case 'remove_admin':
+            if (Session::isAdmin()) {
+                $result = $userModel->removeAdmin($_POST['user_id']);
+                if ($result) {
+                    $result = ['success' => true, 'message' => 'Admin privileges removed successfully!'];
+                } else {
+                    $result = ['success' => false, 'message' => 'Failed to remove admin privileges.'];
+                }
+            } else {
+                $result = ['success' => false, 'message' => 'Access denied'];
+            }
+            break;
+            
+        case 'delete_user':
+            if (Session::isAdmin()) {
+                $result = $userModel->delete($_POST['user_id']);
+                if ($result) {
+                    $result = ['success' => true, 'message' => 'User deleted successfully!'];
+                } else {
+                    $result = ['success' => false, 'message' => 'Failed to delete user.'];
+                }
+            } else {
+                $result = ['success' => false, 'message' => 'Access denied'];
+            }
+            break;
+            
         case 'update_request_status':
             if (Session::isLoggedIn()) {
                 $result = $helpRequestController->updateStatus($_POST['request_id'], $_POST['status']);
@@ -158,6 +197,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'reject_request':
             case 'delete_request':
                 redirect('index.php?page=admin');
+                break;
+            case 'make_admin':
+            case 'remove_admin':
+            case 'delete_user':
+                redirect('index.php?page=admin&tab=users');
                 break;
             case 'delete_comment':
                 redirect('index.php?page=view_request&id=' . $_POST['request_id']);

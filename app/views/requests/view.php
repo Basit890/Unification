@@ -12,6 +12,23 @@ $status_updates = $statusUpdateController->getByRequestId($request_id);
 $donations = $donationController->getByRequestId($request_id);
 
 $progress_percentage = $request['goal_amount'] > 0 ? ($request['current_amount'] / $request['goal_amount']) * 100 : 0;
+
+// Helper function to format file size
+function formatFileSize($bytes) {
+    if ($bytes >= 1073741824) {
+        return number_format($bytes / 1073741824, 2) . ' GB';
+    } elseif ($bytes >= 1048576) {
+        return number_format($bytes / 1048576, 2) . ' MB';
+    } elseif ($bytes >= 1024) {
+        return number_format($bytes / 1024, 2) . ' KB';
+    } elseif ($bytes > 1) {
+        return $bytes . ' bytes';
+    } elseif ($bytes == 1) {
+        return $bytes . ' byte';
+    } else {
+        return '0 bytes';
+    }
+}
 ?>
 
 <div class="two-column">
@@ -44,7 +61,7 @@ $progress_percentage = $request['goal_amount'] > 0 ? ($request['current_amount']
             </div>
         </div>
         
-        <?php if ($request['image_path']): ?>
+        <?php if ($request['image_path'] && file_exists($request['image_path'])): ?>
             <div class="request-image-container">
                 <img src="<?php echo htmlspecialchars($request['image_path']); ?>" alt="Request Image" class="request-image">
             </div>
@@ -57,10 +74,58 @@ $progress_percentage = $request['goal_amount'] > 0 ? ($request['current_amount']
             </div>
         </div>
         
-        <?php if ($request['document_path']): ?>
+        <?php if ($request['document_path'] && file_exists($request['document_path'])): ?>
             <div class="card">
-                <h3>Document</h3>
-                <a href="<?php echo htmlspecialchars($request['document_path']); ?>" target="_blank" class="btn btn-secondary">View Document</a>
+                <h3>📄 Supporting Documents</h3>
+                <div class="document-info">
+                    <?php
+                    $fileExtension = strtolower(pathinfo($request['document_path'], PATHINFO_EXTENSION));
+                    $fileName = basename($request['document_path']);
+                    $fileSize = file_exists($request['document_path']) ? filesize($request['document_path']) : 0;
+                    $fileSizeFormatted = $fileSize > 0 ? formatFileSize($fileSize) : 'Unknown size';
+                    ?>
+                    <div class="document-preview">
+                        <div class="document-icon">
+                            <?php
+                            switch($fileExtension) {
+                                case 'pdf':
+                                    echo '📄';
+                                    break;
+                                case 'doc':
+                                case 'docx':
+                                    echo '📝';
+                                    break;
+                                case 'txt':
+                                    echo '📄';
+                                    break;
+                                case 'jpg':
+                                case 'jpeg':
+                                case 'png':
+                                case 'gif':
+                                    echo '🖼️';
+                                    break;
+                                default:
+                                    echo '📎';
+                            }
+                            ?>
+                        </div>
+                        <div class="document-details">
+                            <div class="document-name"><?php echo htmlspecialchars($fileName); ?></div>
+                            <div class="document-meta">
+                                <span class="file-type"><?php echo strtoupper($fileExtension); ?></span>
+                                <span class="file-size"><?php echo $fileSizeFormatted; ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="document-actions">
+                        <a href="<?php echo htmlspecialchars($request['document_path']); ?>" target="_blank" class="btn btn-secondary">
+                            <span>👁️</span> View Document
+                        </a>
+                        <a href="<?php echo htmlspecialchars($request['document_path']); ?>" download="<?php echo htmlspecialchars($fileName); ?>" class="btn btn-outline">
+                            <span>⬇️</span> Download
+                        </a>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
         
@@ -286,6 +351,83 @@ $progress_percentage = $request['goal_amount'] > 0 ? ($request['current_amount']
     line-height: 1.7;
     color: var(--text-dark);
     font-size: 1.1rem;
+}
+
+.document-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.document-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(0, 166, 81, 0.08);
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(0, 166, 81, 0.2);
+}
+
+.document-icon {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.document-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.document-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.document-meta {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.document-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+.document-actions .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.document-actions .btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    border: 1px solid var(--secondary-color);
+}
+
+.document-actions .btn-secondary:hover {
+    background-color: var(--secondary-color-hover);
+    border-color: var(--secondary-color-hover);
+}
+
+.document-actions .btn-outline {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.document-actions .btn-outline:hover {
+    background-color: var(--primary-color-light);
+    border-color: var(--primary-color-light);
 }
 
 @media (max-width: 768px) {

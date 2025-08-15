@@ -2,36 +2,56 @@
     <h2>💬 Comments Management</h2>
     
     <!-- Comment Statistics -->
-    <div class="comment-stats">
-        <div class="stat-row">
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $stats['total_comments']; ?></span>
-                <span class="stat-label">Total Comments</span>
-            </div>
-            <?php
-            $stmt = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM comments");
-            $uniqueCommenters = $stmt->fetchColumn();
-            ?>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $uniqueCommenters; ?></span>
-                <span class="stat-label">Unique Commenters</span>
-            </div>
-            <?php
-            $stmt = $pdo->query("SELECT COUNT(DISTINCT request_id) FROM comments");
-            $requestsWithComments = $stmt->fetchColumn();
-            ?>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $requestsWithComments; ?></span>
-                <span class="stat-label">Requests with Comments</span>
-            </div>
-            <?php
-            $stmt = $pdo->query("SELECT AVG(LENGTH(comment)) FROM comments");
-            $avgCommentLength = $stmt->fetchColumn();
-            ?>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo round($avgCommentLength); ?></span>
-                <span class="stat-label">Avg Comment Length</span>
-            </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">💬</div>
+            <div class="stat-number"><?php echo $stats['total_comments']; ?></div>
+            <div class="stat-label">Total Comments</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM comments");
+        $uniqueCommenters = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">👤</div>
+            <div class="stat-number"><?php echo $uniqueCommenters; ?></div>
+            <div class="stat-label">Unique Commenters</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT COUNT(DISTINCT request_id) FROM comments");
+        $requestsWithComments = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-number"><?php echo $requestsWithComments; ?></div>
+            <div class="stat-label">Requests with Comments</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT AVG(LENGTH(comment)) FROM comments");
+        $avgCommentLength = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">📏</div>
+            <div class="stat-number"><?php echo round($avgCommentLength); ?></div>
+            <div class="stat-label">Avg Comment Length</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT COUNT(*) FROM comments WHERE LENGTH(comment) > 200");
+        $longComments = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-number"><?php echo $longComments; ?></div>
+            <div class="stat-label">Long Comments (>200)</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT COUNT(*) FROM comments WHERE LENGTH(comment) < 50");
+        $shortComments = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">💭</div>
+            <div class="stat-number"><?php echo $shortComments; ?></div>
+            <div class="stat-label">Short Comments (<50)</div>
         </div>
     </div>
     
@@ -214,6 +234,50 @@
 </div>
 
 <style>
+/* Filter Controls Styling */
+.filter-section {
+    margin-bottom: 2rem;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: end;
+}
+
+.filter-controls select,
+.filter-controls input {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-dark);
+    min-width: 150px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.filter-controls select:focus,
+.filter-controls input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filter-controls select:hover,
+.filter-controls input:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+}
+
+.filter-controls input {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Table Styles */
 .comment-stats {
     margin-bottom: 2rem;
 }

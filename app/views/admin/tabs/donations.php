@@ -2,36 +2,56 @@
     <h2>💰 Donations Management</h2>
     
     <!-- Donation Statistics -->
-    <div class="donation-stats">
-        <div class="stat-row">
-            <div class="stat-item">
-                <span class="stat-number">৳<?php echo number_format($stats['total_donations'], 2); ?></span>
-                <span class="stat-label">Total Donations</span>
-            </div>
-            <?php
-            $stmt = $pdo->query("SELECT COUNT(*) FROM donations");
-            $totalDonationCount = $stmt->fetchColumn();
-            ?>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $totalDonationCount; ?></span>
-                <span class="stat-label">Total Transactions</span>
-            </div>
-            <?php
-            $stmt = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM donations");
-            $uniqueDonors = $stmt->fetchColumn();
-            ?>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $uniqueDonors; ?></span>
-                <span class="stat-label">Unique Donors</span>
-            </div>
-            <?php
-            $stmt = $pdo->query("SELECT AVG(amount) FROM donations");
-            $avgDonation = $stmt->fetchColumn();
-            ?>
-            <div class="stat-item">
-                <span class="stat-number">৳<?php echo number_format($avgDonation, 2); ?></span>
-                <span class="stat-label">Average Donation</span>
-            </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-number">৳<?php echo number_format($stats['total_donations'], 2); ?></div>
+            <div class="stat-label">Total Donations</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT COUNT(*) FROM donations");
+        $totalDonationCount = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">🔄</div>
+            <div class="stat-number"><?php echo $totalDonationCount; ?></div>
+            <div class="stat-label">Total Transactions</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM donations");
+        $uniqueDonors = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-number"><?php echo $uniqueDonors; ?></div>
+            <div class="stat-label">Unique Donors</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT AVG(amount) FROM donations");
+        $avgDonation = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-number">৳<?php echo number_format($avgDonation, 2); ?></div>
+            <div class="stat-label">Average Donation</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT MAX(amount) FROM donations");
+        $maxDonation = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-number">৳<?php echo number_format($maxDonation, 2); ?></div>
+            <div class="stat-label">Largest Donation</div>
+        </div>
+        <?php
+        $stmt = $pdo->query("SELECT COUNT(*) FROM donations WHERE amount >= 10000");
+        $largeDonations = $stmt->fetchColumn();
+        ?>
+        <div class="stat-card">
+            <div class="stat-icon">💎</div>
+            <div class="stat-number"><?php echo $largeDonations; ?></div>
+            <div class="stat-label">Large Donations (10k+)</div>
         </div>
     </div>
     
@@ -242,3 +262,47 @@
             letter-spacing: 0.5px;
         }
         
+/* Filter Controls Styling */
+.filter-section {
+    margin-bottom: 2rem;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: end;
+}
+
+.filter-controls select,
+.filter-controls input {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-dark);
+    min-width: 150px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.filter-controls select:focus,
+.filter-controls input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filter-controls select:hover,
+.filter-controls input:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+}
+
+.filter-controls input {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Table Styles */

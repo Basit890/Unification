@@ -2,24 +2,46 @@
     <h2>📋 Help Requests Management</h2>
     
     <!-- Request Statistics -->
-    <div class="request-stats">
-        <div class="stat-row">
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $stats['total_requests']; ?></span>
-                <span class="stat-label">Total Requests</span>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-number"><?php echo $stats['total_requests']; ?></div>
+            <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-number"><?php echo $stats['pending_requests']; ?></div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-number"><?php echo $stats['approved_requests']; ?></div>
+            <div class="stat-label">Approved</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🎉</div>
+            <div class="stat-number"><?php echo $stats['completed_requests']; ?></div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">❌</div>
+            <div class="stat-number">
+                <?php
+                $stmt = $pdo->query("SELECT COUNT(*) FROM help_requests WHERE status = 'rejected'");
+                echo $stmt->fetchColumn();
+                ?>
             </div>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $stats['pending_requests']; ?></span>
-                <span class="stat-label">Pending</span>
+            <div class="stat-label">Rejected</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔒</div>
+            <div class="stat-number">
+                <?php
+                $stmt = $pdo->query("SELECT COUNT(*) FROM help_requests WHERE status = 'closed'");
+                echo $stmt->fetchColumn();
+                ?>
             </div>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $stats['approved_requests']; ?></span>
-                <span class="stat-label">Approved</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $stats['completed_requests']; ?></span>
-                <span class="stat-label">Completed</span>
-            </div>
+            <div class="stat-label">Closed</div>
         </div>
     </div>
     
@@ -189,5 +211,48 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+        
+        /* Filter Controls Styling */
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+        
+        .filter-controls select,
+        .filter-controls input {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-dark);
+            min-width: 150px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .filter-controls select:focus,
+        .filter-controls input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .filter-controls select:hover,
+        .filter-controls input:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .filter-controls input {
+            flex: 1;
+            min-width: 200px;
         }
         
