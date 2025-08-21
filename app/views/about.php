@@ -2,102 +2,174 @@
     <div class="container">
         <h1 class="hero-title">About Unification</h1>
         <p class="hero-subtitle">Bridging hearts, changing lives, one story at a time</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="stat-number">1000+</span>
+                <span class="stat-label">Lives Changed</span>
+            </div>
+            <div class="hero-stat">
+                <span class="stat-number">৳200K+</span>
+                <span class="stat-label">Funds Raised</span>
+            </div>
+            <div class="hero-stat">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Transparency</span>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="container">
     <div class="about-content">
         <div class="mission-section">
-            <h2>Our Mission</h2>
+            <div class="section-header">
+                <div class="section-icon">🎯</div>
+                <h2>Our Mission</h2>
+                <p class="section-subtitle">Creating meaningful connections between those who need help and those who can provide it</p>
+            </div>
             <div class="mission-card">
                 <p class="mission-text">
                     Unification is more than just a fundraising platform — it is a bridge between those who are in need and those who are willing to help. Our mission is to create a transparent, trustworthy, and accessible space where unprivileged individuals can seek genuine support, and generous donors can contribute directly to meaningful causes.
                 </p>
+                <div class="mission-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🔒</span>
+                        <span class="feature-text">Secure & Transparent</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⚡</span>
+                        <span class="feature-text">Direct Impact</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🤝</span>
+                        <span class="feature-text">Community Driven</span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="values-section">
-            <h2>What We Believe</h2>
+            <div class="section-header">
+                <div class="section-icon">💎</div>
+                <h2>Our Core Values</h2>
+                <p class="section-subtitle">The principles that guide everything we do</p>
+            </div>
             <div class="values-grid">
                 <div class="value-card">
                     <div class="value-icon">🤝</div>
                     <h3>Direct Impact</h3>
                     <p>Every donation goes straight to the beneficiary's verified bank account, ensuring no middlemen, no delays, and 100% transparency.</p>
+                    <div class="value-highlight">100% Direct</div>
                 </div>
                 <div class="value-card">
                     <div class="value-icon">💙</div>
                     <h3>Community Care</h3>
-                    <p>We believe in building a community that cares, where every transaction is visible and accountable.</p>
+                    <p>We believe in building a community that cares, where every transaction is visible and accountable to all members.</p>
+                    <div class="value-highlight">Community First</div>
                 </div>
                 <div class="value-card">
                     <div class="value-icon">🌟</div>
                     <h3>Hope & Equity</h3>
                     <p>Through this platform, we aim to restore hope, promote equity, and bring people together to unify hearts and lives.</p>
+                    <div class="value-highlight">Building Hope</div>
                 </div>
             </div>
         </div>
 
         <div class="impact-section">
-            <h2>Our Impact</h2>
-            <div class="impact-stats">
-                <div class="stat-card">
-                    <div class="stat-number">1000+</div>
-                    <div class="stat-label">People Helped</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">৳200K+</div>
-                    <div class="stat-label">Funds Raised</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">Transparency</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Support</div>
-                </div>
+            <div class="section-header">
+                <div class="section-icon">📈</div>
+                <h2>Our Impact Stories</h2>
+                <p class="section-subtitle">Real stories of transformation and hope</p>
             </div>
             
-            <!-- Ramadan Impact Story -->
             <div class="impact-story">
-                <h3>Recent Impact</h3>
+                <div class="story-header">
+                    <h3>🕌 Ramadan 2024 Impact</h3>
+                    <p class="story-subtitle">A month of giving that changed hundreds of lives</p>
+                </div>
+                
                 <div class="story-content">
                     <div class="story-text">
-                        <p>During the blessed month of Ramadan, Unification made a real difference in the lives of hundreds of people across Dhaka. Thanks to your overwhelming support and generosity, we raised more than <strong>৳50,000</strong>—far exceeding our goal of ৳40,000.</p>
+                        <div class="story-highlight">
+                            <h4>What We Achieved Together</h4>
+                            <p>During the blessed month of Ramadan, Unification made a real difference in the lives of hundreds of people across Dhaka. Thanks to your overwhelming support and generosity, we raised more than <strong>৳50,000</strong>—far exceeding our goal of ৳40,000.</p>
+                        </div>
                         
-                        <p>With these funds, we were able to:</p>
-                        <ul>
-                            <li>Donate <strong>100 Punjabis</strong> to families in need</li>
-                            <li>Distribute <strong>170 Sehri meal packets</strong> to those fasting</li>
-                            <li>Reach <strong>300-400 people</strong> across Dhanmondi, Lalmatia, and Green Road areas</li>
-                        </ul>
-                        
-                        <p>This is just one example of what's possible when a community comes together. Every donation, no matter how small, creates ripples of positive change.</p>
-                    </div>
-                    <div class="story-images">
-                        <div class="image-carousel">
-                            <div class="carousel-container">
-                                <div class="carousel-slide active">
-                                    <img src="app/uploads/ramadan_distribution.jpg" alt="Team distributing aid during Ramadan" class="story-image">
-                                    <span class="image-caption">Our team donating to the needy during Ramadan</span>
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="app/uploads/ramadan_meals.jpg" alt="Carefully packed Sehri meals" class="story-image">
-                                    <span class="image-caption">Carefully packed meals for Sehri distribution</span>
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="app/uploads/ramadan_smiles.jpg" alt="Grateful smiles of beneficiaries" class="story-image">
-                                    <span class="image-caption">Pure joy - the grateful smiles of those who received help</span>
+                        <div class="achievements-grid">
+                            <div class="achievement-item">
+                                <span class="achievement-icon">👕</span>
+                                <div class="achievement-content">
+                                    <span class="achievement-number">100</span>
+                                    <span class="achievement-label">Punjabis Donated</span>
                                 </div>
                             </div>
-                            <div class="carousel-controls">
-                                <button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>
-                                <div class="carousel-dots">
-                                    <span class="dot active" onclick="currentSlide(1)"></span>
-                                    <span class="dot" onclick="currentSlide(2)"></span>
-                                    <span class="dot" onclick="currentSlide(3)"></span>
+                            <div class="achievement-item">
+                                <span class="achievement-icon">🍽️</span>
+                                <div class="achievement-content">
+                                    <span class="achievement-number">170</span>
+                                    <span class="achievement-label">Sehri Meals</span>
                                 </div>
-                                <button class="carousel-btn next" onclick="changeSlide(1)">❯</button>
+                            </div>
+                            <div class="achievement-item">
+                                <span class="achievement-icon">👥</span>
+                                <div class="achievement-content">
+                                    <span class="achievement-number">400</span>
+                                    <span class="achievement-label">People Reached</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="story-locations">
+                            <h4>Areas Served</h4>
+                            <div class="location-tags">
+                                <span class="location-tag">Dhanmondi</span>
+                                <span class="location-tag">Lalmatia</span>
+                                <span class="location-tag">Green Road</span>
+                            </div>
+                        </div>
+                        
+                        <p class="story-conclusion">This is just one example of what's possible when a community comes together. Every donation, no matter how small, creates ripples of positive change.</p>
+                    </div>
+                    
+                    <div class="story-visual">
+                        <div class="modern-carousel">
+                            <div class="carousel-container">
+                                <div class="carousel-slide active">
+                                    <img src="app/uploads/ramadan_distribution.jpg" alt="Team distributing aid during Ramadan" class="carousel-image">
+                                    <div class="carousel-caption">
+                                        <h5>Direct Distribution</h5>
+                                        <p>Our team donating to the needy during Ramadan</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-slide">
+                                    <img src="app/uploads/ramadan_meals.jpg" alt="Carefully packed Sehri meals" class="carousel-image">
+                                    <div class="carousel-caption">
+                                        <h5>Careful Preparation</h5>
+                                        <p>Carefully packed meals for Sehri distribution</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-slide">
+                                    <img src="app/uploads/ramadan_smiles.jpg" alt="Grateful smiles of beneficiaries" class="carousel-image">
+                                    <div class="carousel-caption">
+                                        <h5>Pure Joy</h5>
+                                        <p>The grateful smiles of those who received help</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="carousel-navigation">
+                                <button class="carousel-nav prev" onclick="changeSlide(-1)">
+                                    <span>‹</span>
+                                </button>
+                                <div class="carousel-indicators">
+                                    <span class="indicator active" onclick="currentSlide(1)"></span>
+                                    <span class="indicator" onclick="currentSlide(2)"></span>
+                                    <span class="indicator" onclick="currentSlide(3)"></span>
+                                </div>
+                                <button class="carousel-nav next" onclick="changeSlide(1)">
+                                    <span>›</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -106,8 +178,12 @@
         </div>
 
         <div class="social-section">
-            <h2>Connect With Us</h2>
-            <p class="social-intro">Follow our journey and see real-time impact stories from the field.</p>
+            <div class="section-header">
+                <div class="section-icon">🌐</div>
+                <h2>Connect With Us</h2>
+                <p class="section-subtitle">Follow our journey and see real-time impact stories from the field</p>
+            </div>
+            
             <div class="social-links">
                 <a href="https://www.facebook.com/unification9696" target="_blank" class="social-card facebook">
                     <div class="social-icon">
@@ -121,6 +197,7 @@
                     </div>
                     <div class="social-arrow">→</div>
                 </a>
+                
                 <a href="https://www.instagram.com/__unification_/?hl=en" target="_blank" class="social-card instagram">
                     <div class="social-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -137,12 +214,48 @@
         </div>
 
         <div class="cta-section">
-            <h2>Join Our Mission</h2>
-            <p>Whether someone is facing financial hardship, medical emergencies, or other urgent life situations, Unification provides a platform to tell their story and receive help directly.</p>
-            <div class="cta-buttons">
-                <a href="index.php?page=create_request" class="btn btn-primary">Create a Request</a>
-                <a href="index.php?page=success_stories" class="btn btn-secondary">View Success Stories</a>
+            <div class="section-header">
+                <div class="section-icon">🚀</div>
+                <h2>Join Our Mission</h2>
+                <p class="section-subtitle">Be part of something bigger than yourself</p>
+            </div>
+            
+            <div class="cta-content">
+                <p class="cta-text">
+                    Whether someone is facing financial hardship, medical emergencies, or other urgent life situations, Unification provides a platform to tell their story and receive help directly. Join us in making a difference.
+                </p>
+                
+                <div class="cta-buttons">
+                    <a href="index.php?page=create_request" class="btn btn-primary">Create a Request</a>
+                    <a href="index.php?page=success_stories" class="btn btn-secondary">View Success Stories</a>
+                </div>
             </div>
         </div>
     </div>
-</div> 
+</div>
+
+<script>
+let currentSlideIndex = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const indicators = document.querySelectorAll('.indicator');
+
+function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    indicators.forEach(indicator => indicator.classList.remove('active'));
+    
+    slides[index].classList.add('active');
+    indicators[index].classList.add('active');
+}
+
+function changeSlide(direction) {
+    currentSlideIndex = (currentSlideIndex + direction + slides.length) % slides.length;
+    showSlide(currentSlideIndex);
+}
+
+function currentSlide(index) {
+    currentSlideIndex = index - 1;
+    showSlide(currentSlideIndex);
+}
+
+setInterval(() => changeSlide(1), 5000);
+</script> 

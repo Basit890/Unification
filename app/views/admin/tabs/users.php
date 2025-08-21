@@ -4,33 +4,69 @@
     <!-- User Statistics -->
     <div class="user-stats">
         <div class="stat-row">
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $stats['total_users']; ?></span>
-                <span class="stat-label">Total Users</span>
+            <div class="stat-item total-users">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-number"><?php echo $stats['total_users']; ?></span>
+                    <span class="stat-label">Total Users</span>
+                </div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12%</span>
+                </div>
             </div>
             <?php
             $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type = 'admin'");
             $adminCount = $stmt->fetchColumn();
             ?>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $adminCount; ?></span>
-                <span class="stat-label">Admins</span>
+            <div class="stat-item admins">
+                <div class="stat-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-number"><?php echo $adminCount; ?></span>
+                    <span class="stat-label">Admins</span>
+                </div>
+                <div class="stat-trend">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Protected</span>
+                </div>
             </div>
             <?php
             $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type = 'fundraiser'");
             $fundraiserCount = $stmt->fetchColumn();
             ?>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $fundraiserCount; ?></span>
-                <span class="stat-label">Fundraisers</span>
+            <div class="stat-item fundraisers">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-number"><?php echo $fundraiserCount; ?></span>
+                    <span class="stat-label">Fundraisers</span>
+                </div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+8%</span>
+                </div>
             </div>
             <?php
             $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type = 'donor'");
             $donorCount = $stmt->fetchColumn();
             ?>
-            <div class="stat-item">
-                <span class="stat-number"><?php echo $donorCount; ?></span>
-                <span class="stat-label">Donors</span>
+            <div class="stat-item donors">
+                <div class="stat-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-number"><?php echo $donorCount; ?></span>
+                    <span class="stat-label">Donors</span>
+                </div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+15%</span>
+                </div>
             </div>
         </div>
     </div>
@@ -331,32 +367,123 @@ document.addEventListener('keydown', function(e) {
 
 .stat-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
 }
 
 .stat-item {
-    background: var(--bg-secondary);
-    padding: 1.5rem;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: var(--shadow);
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 255, 255, 0.05) 100%);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.stat-item.total-users::before {
+    background: linear-gradient(90deg, #4ecdc4, #44a08d);
+}
+
+.stat-item.admins::before {
+    background: linear-gradient(90deg, #ff6b6b, #ee5a52);
+}
+
+.stat-item.fundraisers::before {
+    background: linear-gradient(90deg, #45b7d1, #96c93d);
+}
+
+.stat-item.donors::before {
+    background: linear-gradient(90deg, #f093fb, #f5576c);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.stat-item.total-users .stat-icon {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+}
+
+.stat-item.admins .stat-icon {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+}
+
+.stat-item.fundraisers .stat-icon {
+    background: linear-gradient(135deg, #45b7d1, #96c93d);
+}
+
+.stat-item.donors .stat-icon {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.stat-content {
+    flex: 1;
 }
 
 .stat-item .stat-number {
     display: block;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: var(--accent-color);
-    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    line-height: 1;
 }
 
 .stat-item .stat-label {
-    color: var(--text-light);
+    color: var(--text-secondary);
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.stat-trend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.stat-trend i {
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.stat-trend span {
+    font-weight: 600;
 }
 
 .filter-section {

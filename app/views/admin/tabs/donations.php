@@ -174,22 +174,49 @@
                 LIMIT 5
             ");
             $topDonors = $stmt->fetchAll();
+            
+            // Calculate total for progress bars
+            $totalDonated = array_sum(array_column($topDonors, 'total_donated'));
             ?>
             
             <div class="summary-card">
-                <h4>🏆 Top Donors</h4>
+                <div class="summary-header">
+                    <h4><i class="fas fa-trophy"></i> Top Donors</h4>
+                    <span class="summary-subtitle">Most generous contributors</span>
+                </div>
                 <?php if (empty($topDonors)): ?>
-                    <p class="no-data">No donations yet</p>
+                    <div class="no-data">
+                        <i class="fas fa-gift"></i>
+                        <p>No donations yet</p>
+                    </div>
                 <?php else: ?>
                     <div class="donor-list">
                         <?php foreach ($topDonors as $index => $donor): ?>
                             <div class="donor-item">
-                                <div class="donor-rank">#<?php echo $index + 1; ?></div>
+                                <div class="donor-rank">
+                                    <span class="rank-number">#<?php echo $index + 1; ?></span>
+                                    <?php if ($index === 0): ?>
+                                        <i class="fas fa-crown crown-gold"></i>
+                                    <?php elseif ($index === 1): ?>
+                                        <i class="fas fa-medal medal-silver"></i>
+                                    <?php elseif ($index === 2): ?>
+                                        <i class="fas fa-medal medal-bronze"></i>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="donor-details">
                                     <strong><?php echo htmlspecialchars($donor['first_name'] . ' ' . $donor['last_name']); ?></strong>
                                     <small><?php echo $donor['donation_count']; ?> donations</small>
+                                    <div class="donor-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: <?php echo ($donor['total_donated'] / $totalDonated) * 100; ?>%"></div>
+                                        </div>
+                                        <span class="progress-text"><?php echo round(($donor['total_donated'] / $totalDonated) * 100, 1); ?>%</span>
+                                    </div>
                                 </div>
-                                <div class="donor-amount">৳<?php echo number_format($donor['total_donated'], 2); ?></div>
+                                <div class="donor-amount">
+                                    <span class="amount-value">৳<?php echo number_format($donor['total_donated'], 2); ?></span>
+                                    <span class="amount-label">Total</span>
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -205,21 +232,42 @@
                 ORDER BY date DESC
             ");
             $recentDonations = $stmt->fetchAll();
+            
+            // Calculate max daily total for chart scaling
+            $maxDailyTotal = max(array_column($recentDonations, 'daily_total')) ?: 1;
             ?>
             
             <div class="summary-card">
-                <h4>📈 Last 7 Days</h4>
+                <div class="summary-header">
+                    <h4><i class="fas fa-chart-line"></i> Last 7 Days</h4>
+                    <span class="summary-subtitle">Daily donation trends</span>
+                </div>
                 <?php if (empty($recentDonations)): ?>
-                    <p class="no-data">No recent donations</p>
+                    <div class="no-data">
+                        <i class="fas fa-chart-bar"></i>
+                        <p>No recent donations</p>
+                    </div>
                 <?php else: ?>
-                    <div class="daily-stats">
-                        <?php foreach ($recentDonations as $day): ?>
-                            <div class="daily-item">
-                                <div class="daily-date"><?php echo date('M j', strtotime($day['date'])); ?></div>
-                                <div class="daily-amount">৳<?php echo number_format($day['daily_total'], 2); ?></div>
-                                <div class="daily-count"><?php echo $day['daily_count']; ?> donations</div>
+                    <div class="chart-container">
+                        <div class="chart-bars">
+                            <?php foreach ($recentDonations as $day): ?>
+                                <div class="chart-bar">
+                                    <div class="bar-fill" style="height: <?php echo ($day['daily_total'] / $maxDailyTotal) * 100; ?>%"></div>
+                                    <div class="bar-label"><?php echo date('M j', strtotime($day['date'])); ?></div>
+                                    <div class="bar-value">৳<?php echo number_format($day['daily_total'], 0); ?></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="chart-stats">
+                            <div class="stat-mini">
+                                <span class="stat-label">Total Week</span>
+                                <span class="stat-value">৳<?php echo number_format(array_sum(array_column($recentDonations, 'daily_total')), 2); ?></span>
                             </div>
-                        <?php endforeach; ?>
+                            <div class="stat-mini">
+                                <span class="stat-label">Avg/Day</span>
+                                <span class="stat-value">৳<?php echo number_format(array_sum(array_column($recentDonations, 'daily_total')) / count($recentDonations), 2); ?></span>
+                            </div>
+                        </div>
                     </div>
                 <?php endif; ?>
             </div>
@@ -305,4 +353,433 @@
     min-width: 200px;
 }
 
+/* Donation Summary Styles */
+.donation-summary {
+    margin-top: 3rem;
+}
+
+.donation-summary h3 {
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 255, 255, 0.02) 100%);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+.summary-header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.summary-header h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.summary-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Top Donors Styles */
+.donor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.donor-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.donor-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(5px);
+}
+
+.donor-rank {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 50px;
+}
+
+.rank-number {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.crown-gold {
+    color: #ffd700;
+    font-size: 1.1rem;
+}
+
+.medal-silver {
+    color: #c0c0c0;
+    font-size: 1rem;
+}
+
+.medal-bronze {
+    color: #cd7f32;
+    font-size: 1rem;
+}
+
+.donor-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.donor-details strong {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.donor-details small {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.donor-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    color: var(--text-light);
+    font-size: 0.8rem;
+    font-weight: 600;
+    min-width: 40px;
+}
+
+.donor-amount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+    min-width: 100px;
+}
+
+.amount-value {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.amount-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Chart Styles */
+.chart-container {
+    padding: 1rem 0;
+}
+
+.chart-bars {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 0.5rem;
+    height: 200px;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+}
+
+.chart-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.bar-fill {
+    width: 100%;
+    background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease;
+    min-height: 10px;
+}
+
+.bar-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.bar-value {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.chart-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-align: center;
+}
+
+.stat-mini .stat-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.stat-mini .stat-value {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.no-data {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.no-data i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.no-data p {
+    margin: 0;
+    font-style: italic;
+}
+
 /* Table Styles */
+
+/* Filter Count Display */
+.donation-count-display {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.count-info {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.count-info strong {
+    color: var(--text-primary);
+}
+
+/* Clear Filters Button */
+.clear-filters {
+    background: var(--text-secondary);
+    color: var(--card-bg);
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.clear-filters:hover {
+    background: var(--text-primary);
+    transform: translateY(-1px);
+}
+</style>
+
+<script>
+function filterDonations() {
+    const amountFilter = document.getElementById('amountFilter').value;
+    const dateFilter = document.getElementById('dateFilter').value;
+    const searchFilter = document.getElementById('donationSearchFilter').value.toLowerCase();
+    
+    const rows = document.querySelectorAll('.donation-row');
+    let visibleCount = 0;
+    
+    rows.forEach(row => {
+        const amount = parseFloat(row.dataset.amount);
+        const date = row.dataset.date;
+        const searchText = row.textContent.toLowerCase();
+        
+        let matchesAmount = true;
+        if (amountFilter === '0-1000') {
+            matchesAmount = amount >= 0 && amount <= 1000;
+        } else if (amountFilter === '1000-5000') {
+            matchesAmount = amount > 1000 && amount <= 5000;
+        } else if (amountFilter === '5000-10000') {
+            matchesAmount = amount > 5000 && amount <= 10000;
+        } else if (amountFilter === '10000+') {
+            matchesAmount = amount > 10000;
+        }
+        
+        const matchesDate = !dateFilter || date === dateFilter;
+        const matchesSearch = !searchFilter || searchText.includes(searchFilter);
+        
+        if (matchesAmount && matchesDate && matchesSearch) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Update visible count display
+    updateDonationCount(visibleCount);
+    
+    // Show/hide no results message
+    const noResultsMsg = document.getElementById('noResultsMessage');
+    if (visibleCount === 0) {
+        if (!noResultsMsg) {
+            const tbody = document.querySelector('#donationsTable tbody');
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.id = 'noResultsMessage';
+            noResultsRow.innerHTML = `
+                <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
+                    <p>No donations match your filters</p>
+                    <small>Try adjusting your search criteria</small>
+                </td>
+            `;
+            tbody.appendChild(noResultsRow);
+        }
+    } else {
+        if (noResultsMsg) {
+            noResultsMsg.remove();
+        }
+    }
+}
+
+function updateDonationCount(visibleCount) {
+    const totalCount = document.querySelectorAll('.donation-row').length;
+    const countDisplay = document.getElementById('donationCountDisplay');
+    
+    if (!countDisplay) {
+        const filterSection = document.querySelector('.filter-section');
+        const countDiv = document.createElement('div');
+        countDiv.id = 'donationCountDisplay';
+        countDiv.className = 'donation-count-display';
+        countDiv.innerHTML = `
+            <span class="count-info">
+                Showing <strong>${visibleCount}</strong> of <strong>${totalCount}</strong> donations
+            </span>
+        `;
+        filterSection.appendChild(countDiv);
+    } else {
+        countDisplay.innerHTML = `
+            <span class="count-info">
+                Showing <strong>${visibleCount}</strong> of <strong>${totalCount}</strong> donations
+            </span>
+        `;
+    }
+}
+
+// Initialize filters on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dateFilter').value = today;
+    
+    // Add clear filters button
+    const filterControls = document.querySelector('.filter-controls');
+    const clearButton = document.createElement('button');
+    clearButton.type = 'button';
+    clearButton.className = 'btn btn-secondary clear-filters';
+    clearButton.innerHTML = '<i class="fas fa-times"></i> Clear Filters';
+    clearButton.onclick = clearDonationFilters;
+    filterControls.appendChild(clearButton);
+    
+    // Initial count display
+    updateDonationCount(document.querySelectorAll('.donation-row').length);
+});
+
+function clearDonationFilters() {
+    document.getElementById('amountFilter').value = '';
+    document.getElementById('dateFilter').value = '';
+    document.getElementById('donationSearchFilter').value = '';
+    filterDonations();
+}
+</script>

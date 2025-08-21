@@ -1,4 +1,10 @@
 <?php
+// Add Font Awesome for icons
+if (!isset($fontAwesomeAdded)) {
+    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
+    $fontAwesomeAdded = true;
+}
+
 $stats = [];
 
 $stmt = $pdo->query("SELECT COUNT(*) FROM help_requests");
@@ -270,6 +276,35 @@ $tab = $_GET['tab'] ?? 'overview';
 [data-theme="dark"] .admin-tab:hover {
     color: var(--accent-color);
     background: rgba(102, 126, 234, 0.1);
+}
+
+/* CSS Variables for Admin Dashboard */
+:root {
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --text-light: #b0b0b0;
+    --accent-color: #667eea;
+    --primary-color: #00a651;
+    --secondary-color: #ff6b35;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --hover-bg: rgba(0, 166, 81, 0.05);
+}
+
+[data-theme="dark"] {
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-light: #7f8c8d;
+    --accent-color: #667eea;
+    --primary-color: #00a651;
+    --secondary-color: #ff6b35;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --card-bg: #111111;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.5);
+    --hover-bg: rgba(0, 166, 81, 0.1);
 }
 
 /* Responsive design */
