@@ -44,7 +44,12 @@ class Comment {
     }
     
     public function getById($id) {
-        $stmt = $this->db->prepare("SELECT * FROM comments WHERE id = ?");
+        $stmt = $this->db->prepare("
+            SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as user_name
+            FROM comments c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.id = ?
+        ");
         $stmt->execute([$id]);
         return $stmt->fetch();
     }

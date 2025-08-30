@@ -15,7 +15,8 @@ $pageTitles = [
     'donation_history' => 'My Donations - UNIFICATION',
     'profile' => 'My Profile - UNIFICATION',
     'admin' => 'Admin Panel - UNIFICATION',
-    'pending_requests' => 'Pending Requests - UNIFICATION'
+    'pending_requests' => 'Pending Requests - UNIFICATION',
+    'notifications' => 'Notifications - UNIFICATION'
 ];
 
 $pageTitle = $pageTitles[$page] ?? 'UNIFICATION - Crowdfunding Platform';
@@ -71,6 +72,27 @@ switch ($page) {
         
     case 'about':
         include 'app/views/about.php';
+        break;
+        
+    case 'notifications':
+        $notificationController = new NotificationController($pdo);
+        
+        $action = $_GET['action'] ?? 'index';
+        
+        switch ($action) {
+            case 'mark_read':
+                $notificationController->markAsRead();
+                break;
+            case 'mark_all_read':
+                $notificationController->markAllAsRead();
+                break;
+            case 'delete':
+                $notificationController->delete();
+                break;
+            default:
+                $notificationController->index();
+                break;
+        }
         break;
         
     case 'donation_history':

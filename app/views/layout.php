@@ -13,50 +13,102 @@
     <div class="container">
         <header class="header">
             <nav class="nav">
-                <div class="logo">UNIFICATION</div>
-                <ul class="nav-links">
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="index.php?page=about">About</a></li>
-                    <li><a href="index.php?page=success_stories">Success Stories</a></li>
-                    <?php if (Session::isLoggedIn()): ?>
-                        <?php
-                        $user = $userModel->findById(Session::getUserId());
-                        $userType = $user['user_type'] ?? 'fundraiser';
-                        ?>
-                        <li class="nav-dropdown">
-                            <a href="#" class="dropdown-toggle">Actions ▼</a>
-                            <ul class="dropdown-menu">
-                                <?php if ($userType === 'fundraiser' || $userType === 'admin'): ?>
-                                    <li><a href="index.php?page=create_request">Create Request</a></li>
-                                    <li><a href="index.php?page=my_requests">My Requests</a></li>
-                                <?php endif; ?>
-                                <?php if ($userType === 'donor' || $userType === 'fundraiser' || $userType === 'admin'): ?>
-                                    <li><a href="index.php?page=donation_history">My Donations</a></li>
-                                <?php endif; ?>
-                                <?php if ($userType === 'admin'): ?>
-                                    <li><a href="index.php?page=admin">Admin Panel</a></li>
-                                    <li><a href="index.php?page=pending_requests">Pending Requests</a></li>
-                                <?php endif; ?>
-                            </ul>
+                <div class="nav-left">
+                    <div class="logo">UNIFICATION</div>
+                    <ul class="nav-links">
+                        <li class="nav-item">
+                            <a href="index.php" class="nav-link">
+                                <span class="nav-emoji">🏠</span>
+                                <span class="nav-label">Home</span>
+                            </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="index.php?page=about" class="nav-link">
+                                <span class="nav-emoji">ℹ️</span>
+                                <span class="nav-label">About</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="index.php?page=success_stories" class="nav-link">
+                                <span class="nav-emoji">🌟</span>
+                                <span class="nav-label">Success Stories</span>
+                            </a>
+                        </li>
+                        <?php if (Session::isLoggedIn()): ?>
+                            <?php
+                            $user = $userModel->findById(Session::getUserId());
+                            $userType = $user['user_type'] ?? 'fundraiser';
+                            ?>
+                            <li class="nav-item nav-dropdown">
+                                <a href="#" class="nav-link dropdown-toggle">
+                                    <span class="nav-emoji">⚡</span>
+                                    <span class="nav-label">Actions</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <?php if ($userType === 'fundraiser' || $userType === 'admin'): ?>
+                                        <li><a href="index.php?page=create_request">📝 Create Request</a></li>
+                                        <li><a href="index.php?page=my_requests">📋 My Requests</a></li>
+                                    <?php endif; ?>
+                                    <?php if ($userType === 'donor' || $userType === 'fundraiser' || $userType === 'admin'): ?>
+                                        <li><a href="index.php?page=donation_history">💝 My Donations</a></li>
+                                    <?php endif; ?>
+                                    <?php if ($userType === 'admin'): ?>
+                                        <li><a href="index.php?page=admin">🛡️ Admin Panel</a></li>
+                                        <li><a href="index.php?page=pending_requests">⏳ Pending Requests</a></li>
+                                    <?php endif; ?>
+    
+                                </ul>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item">
+                                <a href="index.php?page=login" class="nav-link">
+                                    <span class="nav-emoji">🔑</span>
+                                    <span class="nav-label">Login</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="index.php?page=register" class="nav-link">
+                                    <span class="nav-emoji">📝</span>
+                                    <span class="nav-label">Register</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+                
+                <div class="nav-right">
+                    <li class="nav-item">
+                        <button id="theme-toggle" class="theme-toggle" title="Toggle theme">
+                            <div class="toggle-track">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </button>
+                    </li>
+                    
+                    <?php if (Session::isLoggedIn()): ?>
                         <li class="user-menu">
-                            <a href="index.php?page=profile" class="user-name">Hi, <?php echo htmlspecialchars(Session::getFirstName()); ?></a>
-                            <span class="user-type-badge <?php echo $userType; ?>"><?php echo $userType === 'fundraiser' ? 'Fund' : ucfirst($userType); ?></span>
+                            <div class="user-info-container">
+                                <a href="index.php?page=profile" class="user-info-box" data-user-type="<?php echo $userType; ?>">
+                                    <span class="user-greeting">👋 Hi, <?php echo htmlspecialchars(Session::getFirstName()); ?></span>
+                                    <span class="user-category"><?php echo ucfirst($userType); ?></span>
+                                </a>
+                            </div>
+                            
+                            <!-- Notifications -->
+                            <div class="header-notifications">
+                                <a href="index.php?page=notifications" class="notification-link" title="Notifications">
+                                    🔔
+                                </a>
+                            </div>
+                            
                             <form method="POST" class="logout-form">
                                 <input type="hidden" name="action" value="logout">
                                 <button type="submit" class="btn btn-logout">Logout</button>
                             </form>
                         </li>
-                    <?php else: ?>
-                        <li><a href="index.php?page=login">Login</a></li>
-                        <li><a href="index.php?page=register">Register</a></li>
                     <?php endif; ?>
-                    <li>
-                        <button id="theme-toggle" class="theme-toggle" title="Toggle theme">
-                            <span class="theme-icon">🌙</span>
-                        </button>
-                    </li>
-                </ul>
+                </div>
+                
                 <div class="mobile-menu-toggle">
                     <span></span>
                     <span></span>
@@ -79,6 +131,23 @@
         </div>
     </div>
     
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Action</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancel">Cancel</button>
+                <button class="btn btn-primary" id="modalConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="public/js/app.js"></script>
 </body>

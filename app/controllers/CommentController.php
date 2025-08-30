@@ -24,9 +24,21 @@ class CommentController {
         }
         
         if ($this->commentModel->create($userId, $requestId, $comment)) {
+            $this->createCommentNotification($requestId, $userId);
             return ['success' => true, 'message' => 'Comment added successfully!'];
         } else {
             return ['success' => false, 'message' => 'Failed to add comment.'];
+        }
+    }
+    
+    private function createCommentNotification($requestId, $commenterId) {
+        $comment = $this->commentModel->getByRequestId($requestId);
+        if (!empty($comment)) {
+            $commentId = $comment[0]['id'];
+            
+            global $pdo;
+            $notificationController = new NotificationController($pdo);
+            $notificationController->notifyComment($commentId, $requestId);
         }
     }
     

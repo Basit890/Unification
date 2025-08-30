@@ -31,12 +31,24 @@ class DonationController {
         }
         
         if ($this->donationModel->create($userId, $requestId, $amount)) {
+            $this->createDonationNotification($requestId, $amount);
             return [
                 'success' => true, 
                 'message' => "Your donation to '{$request['title']}' was successful!"
             ];
         } else {
             return ['success' => false, 'message' => 'Donation failed. Please try again.'];
+        }
+    }
+    
+    private function createDonationNotification($requestId, $amount) {
+        $donations = $this->donationModel->getByRequestId($requestId);
+        if (!empty($donations)) {
+            $donationId = $donations[0]['id'];
+            
+            global $pdo;
+            $notificationController = new NotificationController($pdo);
+            $notificationController->notifyDonation($donationId, $requestId);
         }
     }
     

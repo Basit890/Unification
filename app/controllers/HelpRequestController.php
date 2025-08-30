@@ -52,6 +52,8 @@ class HelpRequestController {
         ];
         
         if ($this->helpRequestModel->create($requestData)) {
+            // Notify admins about new pending request
+            $this->notifyAdminsNewRequest($requestData);
             return ['success' => true, 'message' => 'Help request submitted successfully! It will be reviewed by our team.'];
         } else {
             return ['success' => false, 'message' => 'Failed to create help request.'];
@@ -74,6 +76,7 @@ class HelpRequestController {
         $result = $this->helpRequestModel->approveRequest($requestId, Session::getUserId(), $adminNotes);
         
         if ($result) {
+            $this->notifyRequestStatus($requestId, 'approved', $adminNotes);
             return ['success' => true, 'message' => 'Request approved successfully!'];
         } else {
             return ['success' => false, 'message' => 'Failed to approve request.'];
@@ -88,6 +91,7 @@ class HelpRequestController {
         $result = $this->helpRequestModel->rejectRequest($requestId, Session::getUserId(), $adminNotes);
         
         if ($result) {
+            $this->notifyRequestStatus($requestId, 'rejected', $adminNotes);
             return ['success' => true, 'message' => 'Request rejected successfully!'];
         } else {
             return ['success' => false, 'message' => 'Failed to reject request.'];
@@ -96,6 +100,18 @@ class HelpRequestController {
     
     public function getById($id) {
         return $this->helpRequestModel->getById($id);
+    }
+    
+    private function notifyAdminsNewRequest($requestData) {
+        global $pdo;
+        $notificationController = new NotificationController($pdo);
+        $notificationController->notifyAdminNewRequest($requestData['id']);
+    }
+    
+    private function notifyRequestStatus($requestId, $status, $adminNotes = '') {
+        global $pdo;
+        $notificationController = new NotificationController($pdo);
+        $notificationController->notifyRequestStatus($requestId, $status, Session::getUserId());
     }
     
     public function getByUserId($userId) {

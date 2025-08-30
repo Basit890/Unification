@@ -101,6 +101,12 @@ class User {
         return $stmt->execute([$id]);
     }
     
+    public function getAdmins() {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE is_admin = 1 OR user_type = 'admin'");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    
     public function removeAdmin($id) {
         $stmt = $this->db->prepare("UPDATE users SET is_admin = 0, user_type = 'donor' WHERE id = ?");
         return $stmt->execute([$id]);

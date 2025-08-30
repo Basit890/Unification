@@ -12,15 +12,20 @@ require_once __DIR__ . '/models/HelpRequest.php';
 require_once __DIR__ . '/models/Donation.php';
 require_once __DIR__ . '/models/Comment.php';
 require_once __DIR__ . '/models/StatusUpdate.php';
+require_once __DIR__ . '/models/Notification.php';
 
 require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/HelpRequestController.php';
 require_once __DIR__ . '/controllers/DonationController.php';
 require_once __DIR__ . '/controllers/CommentController.php';
 require_once __DIR__ . '/controllers/StatusUpdateController.php';
+require_once __DIR__ . '/controllers/NotificationController.php';
 
 $database = Database::getInstance();
 $pdo = $database->getConnection();
+
+// Setup database tables if they don't exist
+$database->setupDatabase();
 
 $userModel = new User($pdo);
 $helpRequestModel = new HelpRequest($pdo);

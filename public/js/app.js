@@ -256,7 +256,16 @@ function initFloatingActionButton() {
     fab.innerHTML = '<i>+</i>';
     fab.title = 'Create New Request';
 
-    if (document.querySelector('.nav-links a[href*="create_request"]')) {
+    // Always show FAB on home page, or if user is logged in
+    const isHomePage = window.location.pathname.endsWith('index.php') || 
+                      window.location.pathname.endsWith('/') ||
+                      window.location.search.includes('page=home') ||
+                      window.location.search === '';
+    
+    const hasCreateRequestLink = document.querySelector('.nav-links a[href*="create_request"]');
+    const isLoggedIn = document.querySelector('.user-menu') !== null;
+    
+    if (isHomePage || hasCreateRequestLink || isLoggedIn) {
         document.body.appendChild(fab);
     }
 }
@@ -401,11 +410,9 @@ initCopyToClipboard();
 
 function initThemeToggle() {
     const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = themeToggle.querySelector('.theme-icon');
     
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(themeIcon, savedTheme);
     
     themeToggle.addEventListener('click', function() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -414,8 +421,6 @@ function initThemeToggle() {
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         
-        updateThemeIcon(themeIcon, newTheme);
-        
         showNotification(`Switched to ${newTheme} mode`, 'success');
         
         document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
@@ -423,16 +428,6 @@ function initThemeToggle() {
             document.body.style.transition = '';
         }, 300);
     });
-}
-
-function updateThemeIcon(icon, theme) {
-    if (theme === 'light') {
-        icon.textContent = '☀️';
-        icon.title = 'Switch to dark mode';
-    } else {
-        icon.textContent = '🌙';
-        icon.title = 'Switch to light mode';
-    }
 }
 
 let currentSlideIndex = 0;
@@ -519,3 +514,115 @@ function initMobileMenu() {
         });
     }
 } 
+
+function showConfirmationModal(message, onConfirm) {
+    const modal = document.getElementById('confirmationModal');
+    const modalMessage = document.getElementById('modalMessage');
+    const confirmBtn = document.getElementById('modalConfirm');
+    const cancelBtn = document.getElementById('modalCancel');
+    const closeBtn = document.getElementById('modalClose');
+    
+    modalMessage.textContent = message;
+    
+    // Show modal
+    modal.classList.add('show');
+    
+    // Handle confirm
+    const handleConfirm = () => {
+        modal.classList.remove('show');
+        if (onConfirm) onConfirm();
+        cleanup();
+    };
+    
+    // Handle cancel/close
+    const handleCancel = () => {
+        modal.classList.remove('show');
+        cleanup();
+    };
+    
+    const cleanup = () => {
+        confirmBtn.removeEventListener('click', handleConfirm);
+        cancelBtn.removeEventListener('click', handleCancel);
+        closeBtn.removeEventListener('click', handleCancel);
+        modal.removeEventListener('click', handleOutsideClick);
+    };
+    
+    const handleOutsideClick = (e) => {
+        if (e.target === modal) {
+            handleCancel();
+        }
+    };
+    
+    confirmBtn.addEventListener('click', handleConfirm);
+    cancelBtn.addEventListener('click', handleCancel);
+    closeBtn.addEventListener('click', handleCancel);
+    modal.addEventListener('click', handleOutsideClick);
+}
+
+function createNotification(type, title, message, relatedId = null, relatedType = null) {
+    const notification = {
+        id: Date.now() + Math.random(),
+        type: type,
+        title: title,
+        message: message,
+        relatedId: relatedId,
+        relatedType: relatedType,
+        timestamp: new Date(),
+        isRead: false
+    };
+    
+    // Store in localStorage for persistence
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    notifications.unshift(notification);
+    
+    // Keep only last 100 notifications
+    if (notifications.length > 100) {
+        notifications.splice(100);
+    }
+    
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    
+    // Update notification count
+    updateNotificationCount();
+    
+    return notification;
+}
+
+function updateNotificationCount() {
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const unreadCount = notifications.filter(n => !n.isRead).length;
+    
+    // Update header notification badge if it exists
+    const badge = document.querySelector('.notification-badge');
+    if (badge) {
+        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+        badge.style.display = unreadCount > 0 ? 'block' : 'none';
+    }
+}
+
+function markAllNotificationsAsRead() {
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    notifications.forEach(n => n.isRead = true);
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    updateNotificationCount();
+    
+    // Refresh notification display if on notifications page
+    if (window.location.href.includes('notifications')) {
+        location.reload();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateNotificationCount();
+    
+    // Add event listeners for notification actions
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('[data-action="mark-all-read"]')) {
+            e.preventDefault();
+            showConfirmationModal(
+                'Are you sure you want to mark all notifications as read?',
+                markAllNotificationsAsRead
+            );
+        }
+    });
+}); 

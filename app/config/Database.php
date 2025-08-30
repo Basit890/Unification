@@ -4,14 +4,17 @@ class Database {
     private $pdo;
     
     private $host = 'localhost';
+    private $port = '3308';
+    private $socket = '/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock';
     private $dbname = 'gofund';
     private $username = 'root';
     private $password = '';
     
     private function __construct() {
         try {
+            // First connect without database to create it if needed
             $this->pdo = new PDO(
-                "mysql:host={$this->host};charset=utf8mb4",
+                "mysql:unix_socket={$this->socket};charset=utf8mb4",
                 $this->username,
                 $this->password,
                 [
@@ -23,8 +26,9 @@ class Database {
             
             $this->pdo->exec("CREATE DATABASE IF NOT EXISTS `{$this->dbname}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
             
+            // Then connect to the specific database
             $this->pdo = new PDO(
-                "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4",
+                "mysql:unix_socket={$this->socket};dbname={$this->dbname};charset=utf8mb4",
                 $this->username,
                 $this->password,
                 [

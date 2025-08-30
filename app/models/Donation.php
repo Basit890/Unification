@@ -95,9 +95,21 @@ class Donation {
         return $stmt->fetchAll();
     }
     
+    public function getById($id) {
+        $stmt = $this->db->prepare("
+            SELECT d.*, CONCAT(u.first_name, ' ', u.last_name) as donor_name, hr.title as request_title 
+            FROM donations d 
+            JOIN users u ON d.user_id = u.id 
+            JOIN help_requests hr ON d.request_id = hr.id 
+            WHERE d.id = ?
+        ");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
     public function getTopDonors($limit = 5) {
         $stmt = $this->db->prepare("
-            SELECT 
+            SELECT
                 u.id,
                 CONCAT(u.first_name, ' ', u.last_name) as donor_name,
                 SUM(d.amount) as total_donated,
