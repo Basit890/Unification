@@ -1,7 +1,7 @@
 <div class="content-section">
     <h2>📊 Dashboard Overview</h2>
     
-    <!-- Quick Actions -->
+    
     <div class="quick-actions">
         <h3>🚀 Quick Actions</h3>
         <div class="action-grid">
@@ -51,12 +51,12 @@
         </div>
     </div>
     
-    <!-- Recent Activity -->
+    
     <div class="recent-activity">
         <h3>📈 Recent Activity</h3>
         
         <div class="activity-grid">
-            <!-- Recent Requests -->
+            
             <div class="activity-card">
                 <div class="activity-header">
                     <h4><i class="fas fa-plus-circle"></i> Recent Requests</h4>
@@ -101,7 +101,7 @@
                 <?php endif; ?>
             </div>
             
-            <!-- Recent Donations -->
+            
             <div class="activity-card">
                 <div class="activity-header">
                     <h4><i class="fas fa-heart"></i> Recent Donations</h4>

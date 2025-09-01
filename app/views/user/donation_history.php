@@ -2,7 +2,14 @@
 $donations = $donationController->getByUserId(Session::getUserId());
 ?>
 
-<h2>My Donation History</h2>
+<div class="donation-header">
+    <h2>My Donation History</h2>
+    <?php if (!empty($donations)): ?>
+        <a href="index.php?action=download_donation_pdf" class="btn btn-primary">
+            📄 Download Report
+        </a>
+    <?php endif; ?>
+</div>
 
 <?php if (empty($donations)): ?>
     <p>You haven't made any donations yet.</p>

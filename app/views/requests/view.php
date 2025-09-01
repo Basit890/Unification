@@ -13,7 +13,6 @@ $donations = $donationController->getByRequestId($request_id);
 
 $progress_percentage = $request['goal_amount'] > 0 ? ($request['current_amount'] / $request['goal_amount']) * 100 : 0;
 
-// Helper function to format file size
 function formatFileSize($bytes) {
     if ($bytes >= 1073741824) {
         return number_format($bytes / 1073741824, 2) . ' GB';
@@ -129,7 +128,7 @@ function formatFileSize($bytes) {
             </div>
         <?php endif; ?>
         
-        <!-- Status Updates -->
+        
         <?php if (!empty($status_updates)): ?>
             <div class="card">
                 <h3>Status Updates</h3>
@@ -142,7 +141,7 @@ function formatFileSize($bytes) {
             </div>
         <?php endif; ?>
         
-        <!-- Add Status Update (for request owner) -->
+        
         <?php if (Session::isLoggedIn() && (Session::getUserId() == $request['user_id'] || Session::isAdmin())): ?>
             <div class="card">
                 <h3>Add Status Update</h3>
@@ -157,7 +156,7 @@ function formatFileSize($bytes) {
             </div>
         <?php endif; ?>
         
-        <!-- Update Request Status (for request owner) -->
+        
         <?php if (Session::isLoggedIn() && (Session::getUserId() == $request['user_id'] || Session::isAdmin())): ?>
             <div class="card">
                 <h3>Update Request Status</h3>
@@ -178,7 +177,7 @@ function formatFileSize($bytes) {
     </div>
     
     <div>
-        <!-- Funding Progress -->
+        
         <div class="card">
             <h3>Funding Progress</h3>
             <p><strong>৳<?php echo number_format($request['current_amount'], 2); ?></strong> raised of ৳<?php echo number_format($request['goal_amount'], 2); ?> goal</p>
@@ -188,7 +187,7 @@ function formatFileSize($bytes) {
             <p><?php echo number_format($progress_percentage, 1); ?>% funded</p>
         </div>
         
-        <!-- Donation Form -->
+        
         <?php if (Session::isLoggedIn() && $request['status'] === 'approved'): ?>
             <div class="card">
                 <h3>Make a Donation</h3>
@@ -209,7 +208,7 @@ function formatFileSize($bytes) {
             </div>
         <?php endif; ?>
         
-        <!-- Recent Donations -->
+        
         <?php if (!empty($donations)): ?>
             <div class="card">
                 <h3>Recent Donations</h3>
@@ -226,7 +225,7 @@ function formatFileSize($bytes) {
     </div>
 </div>
 
-<!-- Comments Section -->
+
 <div class="card" style="margin-top: 2rem;">
     <h3>Comments</h3>
     

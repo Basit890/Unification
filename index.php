@@ -1,6 +1,18 @@
 <?php
 require_once 'app/bootstrap.php';
 
+$action = $_GET['action'] ?? null;
+
+if ($action === 'download_donation_pdf') {
+    if (!Session::isLoggedIn()) {
+        redirect('index.php?page=login');
+    }
+    
+    $donationController = new DonationController($donationModel, $helpRequestModel);
+    $donationController->downloadDonationPDF(Session::getUserId());
+    exit; // PDF download will handle the response
+}
+
 $page = $_GET['page'] ?? 'home';
 
 $pageTitles = [
@@ -75,6 +87,10 @@ switch ($page) {
         break;
         
     case 'notifications':
+        if (!Session::isLoggedIn()) {
+            redirect('index.php?page=login');
+        }
+        
         $notificationController = new NotificationController($pdo);
         
         $action = $_GET['action'] ?? 'index';

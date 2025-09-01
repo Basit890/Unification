@@ -32,7 +32,7 @@ if ($category_filter && !empty($category_filter)) {
     <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Welcome to Community Help</h1>
     <p style="font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto;">Help others achieve their goals or get support for your own cause. Together, we can make a difference!</p>
     
-    <!-- Quick Stats -->
+    
     <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;">
         <div style="text-align: center; padding: 1rem;">
             <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);"><?php echo count($allRequests); ?></div>
@@ -49,7 +49,7 @@ if ($category_filter && !empty($category_filter)) {
     </div>
 </div>
 
-<!-- Top Generous Donors Section -->
+
 <?php if (!empty($topDonors)): ?>
 <div class="top-donors-section">
     <div class="section-header">
@@ -101,7 +101,7 @@ if ($category_filter && !empty($category_filter)) {
 </div>
 <?php endif; ?>
 
-<!-- Recent Fundraiser Posts Section -->
+
 <div class="recent-posts-section">
     <div class="section-header">
         <h2><i class="fas fa-newspaper"></i> Recent Fundraiser Posts</h2>
@@ -115,7 +115,7 @@ if ($category_filter && !empty($category_filter)) {
         foreach ($recentPosts as $post):
         ?>
             <div class="post-card">
-                <!-- Post Image Section -->
+                
                 <div class="post-image-section">
                     <?php if ($post['image_path'] && file_exists($post['image_path'])): ?>
                         <img src="<?php echo htmlspecialchars($post['image_path']); ?>" 
@@ -129,7 +129,7 @@ if ($category_filter && !empty($category_filter)) {
                         </div>
                     <?php endif; ?>
                     
-                    <!-- Category Badge Overlay -->
+                    
                     <div class="category-badge-overlay">
                         <span class="category-badge"><?php echo htmlspecialchars(ucfirst($post['category'])); ?></span>
                     </div>
@@ -181,7 +181,7 @@ if ($category_filter && !empty($category_filter)) {
     </div>
 </div>
 
-<!-- Enhanced Filter Bar -->
+
 <div class="filter-bar">
     <div class="filter-container">
         <div class="form-group search-group">
@@ -340,7 +340,7 @@ if ($category_filter && !empty($category_filter)) {
         <?php endforeach; ?>
     </div>
     
-    <!-- Campaign count -->
+    
     <div style="text-align: center; margin-top: 2rem; color: var(--text-light);">
         Showing <span id="campaign-count"><?php echo count($requests); ?></span> of <?php echo count($allRequests); ?> campaigns
         <?php if ($category_filter): ?>

@@ -1,7 +1,7 @@
 <div class="content-section">
     <h2>👥 Users Management</h2>
     
-    <!-- User Statistics -->
+    
     <div class="user-stats">
         <div class="stat-row">
             <div class="stat-item total-users">
@@ -71,7 +71,7 @@
         </div>
     </div>
     
-    <!-- User Filters -->
+    
     <div class="filter-section">
         <div class="filter-controls">
             <select id="userTypeFilter" onchange="filterUsers()">
@@ -94,7 +94,7 @@
         </div>
     </div>
     
-    <!-- Users Table -->
+    
     <div class="table-responsive">
         <table class="table" id="usersTable">
             <thead>
@@ -208,7 +208,7 @@
     </div>
 </div>
 
-<!-- Confirmation Modal -->
+
 <div id="confirmModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
@@ -345,14 +345,12 @@ function closeConfirmModal() {
     document.getElementById('confirmModal').style.display = 'none';
 }
 
-// Close modal when clicking outside
 document.getElementById('confirmModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeConfirmModal();
     }
 });
 
-// Close modal with Escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeConfirmModal();

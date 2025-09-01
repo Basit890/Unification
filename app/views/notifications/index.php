@@ -34,10 +34,8 @@
 
     <?php if (empty($notifications)): ?>
         <div class="empty-notifications">
-            <div class="empty-icon">
-                <div class="empty-icon-wrapper">
-                    <i class="fas fa-bell-slash"></i>
-                </div>
+            <div class="empty-icon-wrapper">
+                <i class="fas fa-bell-slash"></i>
             </div>
             <div class="empty-content">
                 <h3>All Caught Up!</h3>
@@ -46,7 +44,7 @@
         </div>
     <?php else: ?>
         <div class="notifications-content">
-            <!-- Recent Notifications -->
+            
             <?php if (!empty($groupedNotifications['recent'])): ?>
                 <div class="notification-section">
                     <div class="section-header">
@@ -64,7 +62,7 @@
                 </div>
             <?php endif; ?>
 
-            <!-- Comments Notifications -->
+            
             <?php if (!empty($groupedNotifications['comments'])): ?>
                 <div class="notification-section">
                     <div class="section-header">
@@ -82,7 +80,7 @@
                 </div>
             <?php endif; ?>
 
-            <!-- Donations Notifications -->
+            
             <?php if (!empty($groupedNotifications['donations'])): ?>
                 <div class="notification-section">
                     <div class="section-header">
@@ -100,7 +98,7 @@
                 </div>
             <?php endif; ?>
 
-            <!-- Approval/Rejection Notifications -->
+            
             <?php if (!empty($groupedNotifications['approvals'])): ?>
                 <div class="notification-section">
                     <div class="section-header">
@@ -118,7 +116,7 @@
                 </div>
             <?php endif; ?>
 
-            <!-- Admin Notifications -->
+            
             <?php if (!empty($groupedNotifications['admin']) && $user['user_type'] === 'admin'): ?>
                 <div class="notification-section">
                     <div class="section-header">
@@ -144,7 +142,7 @@ function markNotificationAsRead(notificationId, element) {
     fetch('index.php?page=notifications&action=mark_read', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/x/www-form-urlencoded',
         },
         body: 'notification_id=' + notificationId
     })
@@ -158,38 +156,60 @@ function markNotificationAsRead(notificationId, element) {
     .catch(error => console.error('Error:', error));
 }
 
-function deleteNotification(notificationId) {
-    showConfirmationModal(
-        'Are you sure you want to delete this notification?',
-        () => {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'index.php?page=notifications&action=delete';
-            
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'notification_id';
-            input.value = notificationId;
-            
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
+function markAllNotificationsAsRead() {
+    fetch('index.php?page=notifications&action=mark_all_read', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x/www-form-urlencoded',
         }
-    );
+    })
+    .then(response => {
+        if (response.ok) {
+            // Reload the page to show updated notifications
+            window.location.reload();
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function deleteNotification(notificationId) {
+    if (confirm('Are you sure you want to delete this notification?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'index.php?page=notifications&action=delete';
+        
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'notification_id';
+        input.value = notificationId;
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
 }
 
 function updateUnreadCount(count) {
-    const badge = document.querySelector('.unread-badge');
-    if (badge) {
-        badge.textContent = count + ' unread';
+    const statusText = document.querySelector('.status-text');
+    if (statusText) {
         if (count === 0) {
-            badge.classList.remove('has-unread');
+            statusText.textContent = 'All caught up!';
+            document.querySelector('.unread-status').className = 'unread-status all-caught-up';
+        } else {
+            statusText.textContent = count + ' unread';
+            document.querySelector('.unread-status').className = 'unread-status has-unread';
         }
     }
 }
 
-// Auto-mark as read when notification is clicked
 document.addEventListener('DOMContentLoaded', function() {
+    // Add event listener for Mark All as Read button
+    const markAllReadBtn = document.querySelector('[data-action="mark-all-read"]');
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', markAllNotificationsAsRead);
+    }
+    
+    // Add event listeners for individual notifications
     document.querySelectorAll('.notification-item').forEach(item => {
         item.addEventListener('click', function() {
             const notificationId = this.dataset.notificationId;

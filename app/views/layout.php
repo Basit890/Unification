@@ -94,7 +94,7 @@
                                 </a>
                             </div>
                             
-                            <!-- Notifications -->
+                            
                             <div class="header-notifications">
                                 <a href="index.php?page=notifications" class="notification-link" title="Notifications">
                                     🔔
@@ -131,7 +131,7 @@
         </div>
     </div>
     
-    <!-- Confirmation Modal -->
+    
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -148,7 +148,7 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
+    
     <script src="public/js/app.js"></script>
 </body>
 </html> 

@@ -19,7 +19,7 @@ class NotificationController {
     
     public function index() {
         if (!Session::isLoggedIn()) {
-            redirect('index.php?page=login');
+            $this->redirect('index.php?page=login');
         }
         
         $userId = Session::getUserId();
@@ -58,18 +58,18 @@ class NotificationController {
     
     public function markAllAsRead() {
         if (!Session::isLoggedIn()) {
-            redirect('index.php?page=login');
+            $this->redirect('index.php?page=login');
         }
         
         $userId = Session::getUserId();
         $this->notificationModel->markAllAsRead($userId);
         
-        redirect('index.php?page=notifications');
+        $this->redirect('index.php?page=notifications');
     }
     
     public function delete() {
         if (!Session::isLoggedIn()) {
-            redirect('index.php?page=login');
+            $this->redirect('index.php?page=login');
         }
         
         $notificationId = $_POST['notification_id'] ?? null;
@@ -79,7 +79,12 @@ class NotificationController {
             $this->notificationModel->delete($notificationId, $userId);
         }
         
-        redirect('index.php?page=notifications');
+        $this->redirect('index.php?page=notifications');
+    }
+    
+    private function redirect($url) {
+        header("Location: $url");
+        exit();
     }
     
     public function notifyComment($commentId, $requestId) {

@@ -66,7 +66,7 @@ if (empty($pendingRequests)): ?>
         <?php endforeach; ?>
     </div>
     
-    <!-- Reject Form (Hidden) -->
+    
     <form id="rejectForm" method="POST" style="display: none;">
         <input type="hidden" name="action" value="reject_request">
         <input type="hidden" name="request_id" id="reject_request_id">

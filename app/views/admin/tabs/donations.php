@@ -1,7 +1,7 @@
 <div class="content-section">
     <h2>💰 Donations Management</h2>
     
-    <!-- Donation Statistics -->
+    
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon">💰</div>
@@ -55,7 +55,7 @@
         </div>
     </div>
     
-    <!-- Donation Filters -->
+    
     <div class="filter-section">
         <div class="filter-controls">
             <select id="amountFilter" onchange="filterDonations()">
@@ -72,7 +72,7 @@
         </div>
     </div>
     
-    <!-- Donations Table -->
+    
     <div class="table-responsive">
         <table class="table" id="donationsTable">
             <thead>
@@ -160,7 +160,7 @@
         </table>
     </div>
     
-    <!-- Donation Summary -->
+    
     <div class="donation-summary">
         <h3>📊 Donation Summary</h3>
         <div class="summary-grid">
@@ -757,7 +757,6 @@ function updateDonationCount(visibleCount) {
     }
 }
 
-// Initialize filters on page load
 document.addEventListener('DOMContentLoaded', function() {
     // Set default date to today
     const today = new Date().toISOString().split('T')[0];

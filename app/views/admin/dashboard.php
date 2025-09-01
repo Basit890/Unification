@@ -1,5 +1,4 @@
 <?php
-// Add Font Awesome for icons
 if (!isset($fontAwesomeAdded)) {
     echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
     $fontAwesomeAdded = true;
@@ -32,13 +31,13 @@ $tab = $_GET['tab'] ?? 'overview';
 ?>
 
 <div class="admin-container">
-    <!-- Admin Header -->
+    
     <div class="admin-header">
         <h1>Admin Dashboard</h1>
         <p>Manage your crowdfunding platform</p>
     </div>
 
-    <!-- Statistics Overview -->
+    
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon">📋</div>
@@ -72,7 +71,7 @@ $tab = $_GET['tab'] ?? 'overview';
         </div>
     </div>
 
-    <!-- Admin Tabs -->
+    
     <div class="admin-tabs">
         <a href="index.php?page=admin&tab=overview" class="admin-tab <?php echo $tab === 'overview' ? 'active' : ''; ?>">
             📊 Overview
@@ -91,7 +90,7 @@ $tab = $_GET['tab'] ?? 'overview';
         </a>
     </div>
 
-    <!-- Tab Content -->
+    
     <div class="tab-content">
         <?php
         switch ($tab) {

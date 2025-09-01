@@ -1,7 +1,7 @@
 <div class="content-section">
     <h2>💬 Comments Management</h2>
     
-    <!-- Comment Statistics -->
+    
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon">💬</div>
@@ -55,7 +55,7 @@
         </div>
     </div>
     
-    <!-- Comment Filters -->
+    
     <div class="filter-section">
         <div class="filter-controls">
             <select id="commentLengthFilter" onchange="filterComments()">
@@ -71,7 +71,7 @@
         </div>
     </div>
     
-    <!-- Comments Table -->
+    
     <div class="table-responsive">
         <table class="table" id="commentsTable">
             <thead>
@@ -166,7 +166,7 @@
         </table>
     </div>
     
-    <!-- Comment Summary -->
+    
     <div class="comment-summary">
         <h3>📊 Comment Summary</h3>
         <div class="summary-grid">
@@ -808,7 +808,6 @@ function updateCommentCount(visibleCount) {
     }
 }
 
-// Initialize filters on page load
 document.addEventListener('DOMContentLoaded', function() {
     // Set default date to today
     const today = new Date().toISOString().split('T')[0];

@@ -7,13 +7,12 @@ $userTypeLabels = [
 ];
 $userType = $userTypeLabels[$user['user_type']] ?? 'User';
 
-// Get email from user data since it's not in session
 $userEmail = $user['email'] ?? 'Not available';
 $userUsername = $user['username'] ?? 'Not available';
 ?>
 
 <div class="profile-container">
-    <!-- Profile Header -->
+    
     <div class="profile-header">
         <div class="profile-avatar">
             <?php echo strtoupper(substr(Session::getFullName(), 0, 1)); ?>
@@ -23,7 +22,7 @@ $userUsername = $user['username'] ?? 'Not available';
     </div>
 
     <div class="profile-sections">
-        <!-- Personal Information Section -->
+        
         <div class="profile-section personal-info">
             <h3>Personal Information</h3>
             <div class="profile-field">
@@ -38,7 +37,7 @@ $userUsername = $user['username'] ?? 'Not available';
             </div>
         </div>
 
-        <!-- Religious Information Section -->
+        
         <div class="profile-section religious-info">
             <h3>Religious Information</h3>
             <div class="profile-field">
@@ -48,7 +47,7 @@ $userUsername = $user['username'] ?? 'Not available';
             </div>
         </div>
 
-        <!-- Account Information Section -->
+        
         <div class="profile-section account-info">
             <h3>Account Information</h3>
             <div class="profile-field field-username">
@@ -72,7 +71,7 @@ $userUsername = $user['username'] ?? 'Not available';
                 <span class="field-icon">✅</span>
             </div>
 
-            <!-- Account Actions -->
+            
             <div class="account-actions">
                 <h4>Account Actions</h4>
                 <div class="action-buttons">
@@ -104,7 +103,7 @@ $userUsername = $user['username'] ?? 'Not available';
         </div>
     </div>
 
-    <!-- Zakat Calculator Section -->
+    
     <?php if ($user && ($user['religion'] === 'islam' || $user['religion'] === 'Islam')): ?>
         <?php include 'app/views/user/zakat_calculator.php'; ?>
     <?php endif; ?>

@@ -76,7 +76,6 @@
 </div>
 
 <?php
-// Helper function to format time ago
 function timeAgo($datetime) {
     $time = strtotime($datetime);
     $now = time();

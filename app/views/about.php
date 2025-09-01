@@ -5,7 +5,7 @@
         <div class="hero-stats">
             <div class="hero-stat">
                 <span class="stat-number">1000+</span>
-                <span class="stat-label">Lives Changed</span>
+                <span class="stat-label">People Got Help</span>
             </div>
             <div class="hero-stat">
                 <span class="stat-number">৳200K+</span>
@@ -100,21 +100,21 @@
                             <div class="achievement-item">
                                 <span class="achievement-icon">👕</span>
                                 <div class="achievement-content">
-                                    <span class="achievement-number">100</span>
+                                    <span class="achievement-number">100+</span>
                                     <span class="achievement-label">Punjabis Donated</span>
                                 </div>
                             </div>
                             <div class="achievement-item">
                                 <span class="achievement-icon">🍽️</span>
                                 <div class="achievement-content">
-                                    <span class="achievement-number">170</span>
+                                    <span class="achievement-number">200+</span>
                                     <span class="achievement-label">Sehri Meals</span>
                                 </div>
                             </div>
                             <div class="achievement-item">
                                 <span class="achievement-icon">👥</span>
                                 <div class="achievement-content">
-                                    <span class="achievement-number">400</span>
+                                    <span class="achievement-number">350+</span>
                                     <span class="achievement-label">People Reached</span>
                                 </div>
                             </div>
@@ -235,27 +235,37 @@
 </div>
 
 <script>
-let currentSlideIndex = 0;
-const slides = document.querySelectorAll('.carousel-slide');
-const indicators = document.querySelectorAll('.indicator');
+(function() {
+    const aboutSlides = document.querySelectorAll('.carousel-slide');
+    const aboutIndicators = document.querySelectorAll('.indicator');
+    let aboutCurrentIndex = 0;
 
-function showSlide(index) {
-    slides.forEach(slide => slide.classList.remove('active'));
-    indicators.forEach(indicator => indicator.classList.remove('active'));
-    
-    slides[index].classList.add('active');
-    indicators[index].classList.add('active');
-}
+    function aboutShowSlide(index) {
+        if (!aboutSlides.length) return;
+        aboutSlides.forEach(slide => slide.classList.remove('active'));
+        aboutIndicators.forEach(indicator => indicator.classList.remove('active'));
+        aboutSlides[index].classList.add('active');
+        if (aboutIndicators[index]) aboutIndicators[index].classList.add('active');
+    }
 
-function changeSlide(direction) {
-    currentSlideIndex = (currentSlideIndex + direction + slides.length) % slides.length;
-    showSlide(currentSlideIndex);
-}
+    function aboutChangeSlide(direction) {
+        if (!aboutSlides.length) return;
+        aboutCurrentIndex = (aboutCurrentIndex + direction + aboutSlides.length) % aboutSlides.length;
+        aboutShowSlide(aboutCurrentIndex);
+    }
 
-function currentSlide(index) {
-    currentSlideIndex = index - 1;
-    showSlide(currentSlideIndex);
-}
+    function aboutCurrentSlide(index) {
+        if (!aboutSlides.length) return;
+        aboutCurrentIndex = index - 1;
+        aboutShowSlide(aboutCurrentIndex);
+    }
 
-setInterval(() => changeSlide(1), 5000);
-</script> 
+    // Expose functions used by inline HTML handlers without clashing with global names
+    window.changeSlide = aboutChangeSlide;
+    window.currentSlide = aboutCurrentSlide;
+
+    // Initialize
+    aboutShowSlide(0);
+    setInterval(() => aboutChangeSlide(1), 5000);
+})();
+</script>

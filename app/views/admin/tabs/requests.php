@@ -1,7 +1,7 @@
 <div class="content-section">
     <h2>📋 Help Requests Management</h2>
     
-    <!-- Request Statistics -->
+    
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon">📋</div>
@@ -45,7 +45,7 @@
         </div>
     </div>
     
-    <!-- Request Filters -->
+    
     <div class="filter-section">
         <div class="filter-controls">
             <select id="statusFilter" onchange="filterRequests()">
@@ -70,7 +70,7 @@
         </div>
     </div>
     
-    <!-- Requests Table -->
+    
     <div class="table-responsive">
         <table class="table" id="requestsTable">
             <thead>
