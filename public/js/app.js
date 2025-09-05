@@ -250,24 +250,26 @@ function initLoadingStates() {
 }
 
 function initFloatingActionButton() {
-    const fab = document.createElement('a');
-    fab.href = 'index.php?page=create_request';
-    fab.className = 'fab';
-    fab.innerHTML = '<i>+</i>';
-    fab.title = 'Create New Request';
-
-    // Always show FAB on home page, or if user is logged in
-    const isHomePage = window.location.pathname.endsWith('index.php') || 
-                      window.location.pathname.endsWith('/') ||
-                      window.location.search.includes('page=home') ||
-                      window.location.search === '';
+    // Check if user is logged in and get user type
+    const userMenu = document.querySelector('.user-menu');
+    const userInfoBox = document.querySelector('.user-info-box');
+    const isLoggedIn = userMenu !== null;
     
-    const hasCreateRequestLink = document.querySelector('.nav-links a[href*="create_request"]');
-    const isLoggedIn = document.querySelector('.user-menu') !== null;
+    if (!isLoggedIn) return;
     
-    if (isHomePage || hasCreateRequestLink || isLoggedIn) {
+    // Get user type from data attribute
+    const userType = userInfoBox ? userInfoBox.getAttribute('data-user-type') : null;
+    
+    // Only show FAB for fundraisers and admins (donors cannot create posts)
+    if (userType === 'fundraiser' || userType === 'admin') {
+        const fab = document.createElement('a');
+        fab.href = 'index.php?page=create_request';
+        fab.className = 'fab';
+        fab.innerHTML = '<i>+</i>';
+        fab.title = 'Create New Request';
         document.body.appendChild(fab);
     }
+    // Donors will not see any create button
 }
 
 function showNotification(message, type = 'info') {
@@ -410,24 +412,105 @@ initCopyToClipboard();
 
 function initThemeToggle() {
     const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
     
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(themeIcon, savedTheme);
     
-    themeToggle.addEventListener('click', function() {
+    themeToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
         
+        // Add click animation
+        themeToggle.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            themeToggle.style.transform = '';
+        }, 150);
+        
+        // Update theme
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
+        updateThemeIcon(themeIcon, newTheme);
         
-        showNotification(`Switched to ${newTheme} mode`, 'success');
-        
+        // Smooth transition for all elements
         document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+        document.querySelectorAll('*').forEach(el => {
+            el.style.transition = 'background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease';
+        });
+        
         setTimeout(() => {
             document.body.style.transition = '';
+            document.querySelectorAll('*').forEach(el => {
+                el.style.transition = '';
+            });
         }, 300);
+        
+        // Show subtle notification
+        showThemeNotification(newTheme);
     });
+    
+    // Add keyboard support
+    themeToggle.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            themeToggle.click();
+        }
+    });
+}
+
+function updateThemeIcon(icon, theme) {
+    if (theme === 'light') {
+        icon.textContent = '🌙';
+        icon.title = 'Switch to Dark Mode';
+    } else {
+        icon.textContent = '☀️';
+        icon.title = 'Switch to Light Mode';
+    }
+}
+
+function showThemeNotification(theme) {
+    // Create a subtle notification
+    const notification = document.createElement('div');
+    notification.className = 'theme-notification';
+    notification.textContent = `Switched to ${theme} mode`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: var(--shadow-hover);
+        z-index: 1000;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateY(0)';
+    }, 10);
+    
+    // Remove after delay
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 2000);
 }
 
 let currentSlideIndex = 0;

@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -52,6 +53,9 @@
                                     <?php if ($userType === 'donor' || $userType === 'fundraiser' || $userType === 'admin'): ?>
                                         <li><a href="index.php?page=donation_history">💝 My Donations</a></li>
                                     <?php endif; ?>
+                                    <?php if (strtolower($user['religion']) === 'islam'): ?>
+                                        <li><a href="index.php?page=zakat_calculator">🕌 Zakat Calculator</a></li>
+                                    <?php endif; ?>
                                     <?php if ($userType === 'admin'): ?>
                                         <li><a href="index.php?page=admin">🛡️ Admin Panel</a></li>
                                         <li><a href="index.php?page=pending_requests">⏳ Pending Requests</a></li>
@@ -77,14 +81,6 @@
                 </div>
                 
                 <div class="nav-right">
-                    <li class="nav-item">
-                        <button id="theme-toggle" class="theme-toggle" title="Toggle theme">
-                            <div class="toggle-track">
-                                <div class="toggle-knob"></div>
-                            </div>
-                        </button>
-                    </li>
-                    
                     <?php if (Session::isLoggedIn()): ?>
                         <li class="user-menu">
                             <div class="user-info-container">
@@ -94,17 +90,26 @@
                                 </a>
                             </div>
                             
-                            
                             <div class="header-notifications">
                                 <a href="index.php?page=notifications" class="notification-link" title="Notifications">
                                     🔔
                                 </a>
                             </div>
                             
+                            <button id="theme-toggle" class="nav-link theme-toggle circular-toggle" title="Toggle theme">
+                                <span class="nav-emoji theme-icon">🌙</span>
+                            </button>
+                            
                             <form method="POST" class="logout-form">
                                 <input type="hidden" name="action" value="logout">
                                 <button type="submit" class="btn btn-logout">Logout</button>
                             </form>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <button id="theme-toggle" class="nav-link theme-toggle circular-toggle" title="Toggle theme">
+                                <span class="nav-emoji theme-icon">🌙</span>
+                            </button>
                         </li>
                     <?php endif; ?>
                 </div>
@@ -150,5 +155,14 @@
 
     
     <script src="public/js/app.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    </script>
 </body>
 </html> 

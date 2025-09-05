@@ -1,19 +1,46 @@
 <div class="about-hero">
+    <div class="hero-background">
+        <div class="hero-pattern"></div>
+    </div>
     <div class="container">
-        <h1 class="hero-title">About Unification</h1>
-        <p class="hero-subtitle">Bridging hearts, changing lives, one story at a time</p>
-        <div class="hero-stats">
-            <div class="hero-stat">
-                <span class="stat-number">1000+</span>
-                <span class="stat-label">People Got Help</span>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-heart"></i>
+                <span>Making a Difference Since 2021</span>
             </div>
-            <div class="hero-stat">
-                <span class="stat-number">৳200K+</span>
-                <span class="stat-label">Funds Raised</span>
-            </div>
-            <div class="hero-stat">
-                <span class="stat-number">100%</span>
-                <span class="stat-label">Transparency</span>
+            <h1 class="hero-title">
+                <span class="title-line">About</span>
+                <span class="title-line highlight">Unification</span>
+            </h1>
+            <p class="hero-subtitle">Bridging hearts, changing lives, one story at a time through transparent, direct giving</p>
+            <div class="hero-stats">
+                <div class="hero-stat" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" data-count="1000">0+</span>
+                        <span class="stat-label">People Helped</span>
+                    </div>
+                </div>
+                <div class="hero-stat" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" data-count="200">0K+</span>
+                        <span class="stat-label">Funds Raised</span>
+                    </div>
+                </div>
+                <div class="hero-stat" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Transparency</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -21,72 +48,88 @@
 
 <div class="container">
     <div class="about-content">
-        <div class="mission-section">
+        <div class="mission-section" data-aos="fade-up">
             <div class="section-header">
-                <div class="section-icon">🎯</div>
                 <h2>Our Mission</h2>
                 <p class="section-subtitle">Creating meaningful connections between those who need help and those who can provide it</p>
             </div>
-            <div class="mission-card">
-                <p class="mission-text">
-                    Unification is more than just a fundraising platform — it is a bridge between those who are in need and those who are willing to help. Our mission is to create a transparent, trustworthy, and accessible space where unprivileged individuals can seek genuine support, and generous donors can contribute directly to meaningful causes.
-                </p>
+            <div class="mission-content">
+                <div class="mission-text-wrapper">
+                    <div class="mission-quote">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="mission-text">
+                        Unification is more than just a fundraising platform — it is a bridge between those who are in need and those who are willing to help. Our mission is to create a transparent, trustworthy, and accessible space where unprivileged individuals can seek genuine support, and generous donors can contribute directly to meaningful causes.
+                    </p>
+                </div>
                 <div class="mission-features">
-                    <div class="feature-item">
-                        <span class="feature-icon">🔒</span>
-                        <span class="feature-text">Secure & Transparent</span>
+                    <div class="feature-item" data-aos="fade-right" data-aos-delay="100">
+                        <i class="fas fa-shield-alt feature-icon"></i>
+                        <h4>Secure & Transparent</h4>
+                        <p>Every transaction is verified and transparent</p>
                     </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">⚡</span>
-                        <span class="feature-text">Direct Impact</span>
+                    <div class="feature-item" data-aos="fade-right" data-aos-delay="200">
+                        <i class="fas fa-bolt feature-icon"></i>
+                        <h4>Direct Impact</h4>
+                        <p>100% of donations go directly to beneficiaries</p>
                     </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🤝</span>
-                        <span class="feature-text">Community Driven</span>
+                    <div class="feature-item" data-aos="fade-right" data-aos-delay="300">
+                        <i class="fas fa-hands-helping feature-icon"></i>
+                        <h4>Community Driven</h4>
+                        <p>Built by the community, for the community</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="values-section">
+        <div class="values-section" data-aos="fade-up">
             <div class="section-header">
-                <div class="section-icon">💎</div>
                 <h2>Our Core Values</h2>
                 <p class="section-subtitle">The principles that guide everything we do</p>
             </div>
             <div class="values-grid">
-                <div class="value-card">
-                    <div class="value-icon">🤝</div>
-                    <h3>Direct Impact</h3>
-                    <p>Every donation goes straight to the beneficiary's verified bank account, ensuring no middlemen, no delays, and 100% transparency.</p>
-                    <div class="value-highlight">100% Direct</div>
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="value-card-inner">
+                        <i class="fas fa-hand-holding-heart value-icon"></i>
+                        <div class="value-content">
+                            <h3>Direct Impact</h3>
+                            <p>Every donation goes straight to the beneficiary's verified bank account, ensuring no middlemen, no delays, and 100% transparency.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="value-card">
-                    <div class="value-icon">💙</div>
-                    <h3>Community Care</h3>
-                    <p>We believe in building a community that cares, where every transaction is visible and accountable to all members.</p>
-                    <div class="value-highlight">Community First</div>
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="value-card-inner">
+                        <i class="fas fa-heart value-icon"></i>
+                        <div class="value-content">
+                            <h3>Community Care</h3>
+                            <p>We believe in building a community that cares, where every transaction is visible and accountable to all members.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="value-card">
-                    <div class="value-icon">🌟</div>
-                    <h3>Hope & Equity</h3>
-                    <p>Through this platform, we aim to restore hope, promote equity, and bring people together to unify hearts and lives.</p>
-                    <div class="value-highlight">Building Hope</div>
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="value-card-inner">
+                        <i class="fas fa-star value-icon"></i>
+                        <div class="value-content">
+                            <h3>Hope & Equity</h3>
+                            <p>Through this platform, we aim to restore hope, promote equity, and bring people together to unify hearts and lives.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="impact-section">
+        <div class="impact-section" data-aos="fade-up">
             <div class="section-header">
-                <div class="section-icon">📈</div>
                 <h2>Our Impact Stories</h2>
                 <p class="section-subtitle">Real stories of transformation and hope</p>
             </div>
             
-            <div class="impact-story">
+            <div class="impact-story" data-aos="fade-up" data-aos-delay="200">
                 <div class="story-header">
-                    <h3>🕌 Ramadan 2024 Impact</h3>
-                    <p class="story-subtitle">A month of giving that changed hundreds of lives</p>
+                    <div class="story-title-content">
+                        <h3>Ramadan 2024 Impact</h3>
+                        <p class="story-subtitle">A month of giving that changed hundreds of lives</p>
+                    </div>
                 </div>
                 
                 <div class="story-content">
@@ -120,56 +163,67 @@
                             </div>
                         </div>
                         
-                        <div class="story-locations">
-                            <h4>Areas Served</h4>
-                            <div class="location-tags">
-                                <span class="location-tag">Dhanmondi</span>
-                                <span class="location-tag">Lalmatia</span>
-                                <span class="location-tag">Green Road</span>
-                            </div>
-                        </div>
-                        
                         <p class="story-conclusion">This is just one example of what's possible when a community comes together. Every donation, no matter how small, creates ripples of positive change.</p>
+                        
+                        <div class="story-cta">
+                            <a href="index.php" class="btn btn-primary story-donate-btn">
+                                <i class="fas fa-heart"></i>
+                                Donate Now
+                            </a>
+                            <p class="story-cta-text">Help create more success stories like this</p>
+                        </div>
                     </div>
                     
                     <div class="story-visual">
-                        <div class="modern-carousel">
-                            <div class="carousel-container">
-                                <div class="carousel-slide active">
-                                    <img src="app/uploads/ramadan_distribution.jpg" alt="Team distributing aid during Ramadan" class="carousel-image">
-                                    <div class="carousel-caption">
-                                        <h5>Direct Distribution</h5>
-                                        <p>Our team donating to the needy during Ramadan</p>
+                        <div class="story-visual-content">
+                            <div class="modern-carousel">
+                                <div class="carousel-container">
+                                    <div class="carousel-slide active">
+                                        <img src="app/uploads/ramadan_distribution.jpg" alt="Team distributing aid during Ramadan" class="carousel-image">
+                                        <div class="carousel-caption">
+                                            <h5>Direct Distribution</h5>
+                                            <p>Our team donating to the needy during Ramadan</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <img src="app/uploads/ramadan_meals.jpg" alt="Carefully packed Sehri meals" class="carousel-image">
+                                        <div class="carousel-caption">
+                                            <h5>Careful Preparation</h5>
+                                            <p>Carefully packed meals for Sehri distribution</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <img src="app/uploads/ramadan_smiles.jpg" alt="Grateful smiles of beneficiaries" class="carousel-image">
+                                        <div class="carousel-caption">
+                                            <h5>Pure Joy</h5>
+                                            <p>The grateful smiles of those who received help</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="carousel-slide">
-                                    <img src="app/uploads/ramadan_meals.jpg" alt="Carefully packed Sehri meals" class="carousel-image">
-                                    <div class="carousel-caption">
-                                        <h5>Careful Preparation</h5>
-                                        <p>Carefully packed meals for Sehri distribution</p>
+                                
+                                <div class="carousel-navigation">
+                                    <button class="carousel-nav prev" onclick="changeSlide(-1)">
+                                        <span>‹</span>
+                                    </button>
+                                    <div class="carousel-indicators">
+                                        <span class="indicator active" onclick="currentSlide(1)"></span>
+                                        <span class="indicator" onclick="currentSlide(2)"></span>
+                                        <span class="indicator" onclick="currentSlide(3)"></span>
                                     </div>
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="app/uploads/ramadan_smiles.jpg" alt="Grateful smiles of beneficiaries" class="carousel-image">
-                                    <div class="carousel-caption">
-                                        <h5>Pure Joy</h5>
-                                        <p>The grateful smiles of those who received help</p>
-                                    </div>
+                                    <button class="carousel-nav next" onclick="changeSlide(1)">
+                                        <span>›</span>
+                                    </button>
                                 </div>
                             </div>
                             
-                            <div class="carousel-navigation">
-                                <button class="carousel-nav prev" onclick="changeSlide(-1)">
-                                    <span>‹</span>
-                                </button>
-                                <div class="carousel-indicators">
-                                    <span class="indicator active" onclick="currentSlide(1)"></span>
-                                    <span class="indicator" onclick="currentSlide(2)"></span>
-                                    <span class="indicator" onclick="currentSlide(3)"></span>
+                            <div class="story-locations">
+                                <h4>Areas Served</h4>
+                                <div class="location-tags">
+                                    <span class="location-tag">Dhanmondi</span>
+                                    <span class="location-tag">Lalmatia</span>
+                                    <span class="location-tag">Green Road</span>
                                 </div>
-                                <button class="carousel-nav next" onclick="changeSlide(1)">
-                                    <span>›</span>
-                                </button>
+                                <p class="location-note">We've reached communities across Dhaka, bringing hope and support to those who need it most.</p>
                             </div>
                         </div>
                     </div>
@@ -177,11 +231,10 @@
             </div>
         </div>
 
-        <div class="social-section">
+        <div class="social-section" data-aos="fade-up">
             <div class="section-header">
-                <div class="section-icon">🌐</div>
                 <h2>Connect With Us</h2>
-                <p class="section-subtitle">Follow our journey and see real-time impact stories from the field</p>
+                <p class="section-subtitle">Follow our journey and see real-time impact stories</p>
             </div>
             
             <div class="social-links">
@@ -213,9 +266,8 @@
             </div>
         </div>
 
-        <div class="cta-section">
+        <div class="cta-section" data-aos="fade-up">
             <div class="section-header">
-                <div class="section-icon">🚀</div>
                 <h2>Join Our Mission</h2>
                 <p class="section-subtitle">Be part of something bigger than yourself</p>
             </div>
@@ -235,7 +287,49 @@
 </div>
 
 <script>
-(function() {
+// AOS (Animate On Scroll) initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS if available
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    }
+
+    // Counter animation for hero stats
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number[data-count]');
+        
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-count'));
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16); // 60fps
+            let current = 0;
+            
+            // Get the suffix from the current text content
+            const currentText = counter.textContent;
+            const suffix = currentText.replace(/^\d+/, '');
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                counter.textContent = Math.floor(current) + suffix;
+            }, 16);
+        });
+    }
+
+    // Start counter animation immediately when page loads
+    setTimeout(() => {
+        animateCounters();
+    }, 300);
+
+    // Carousel functionality
     const aboutSlides = document.querySelectorAll('.carousel-slide');
     const aboutIndicators = document.querySelectorAll('.indicator');
     let aboutCurrentIndex = 0;
@@ -260,12 +354,38 @@
         aboutShowSlide(aboutCurrentIndex);
     }
 
-    // Expose functions used by inline HTML handlers without clashing with global names
+    // Expose functions globally
     window.changeSlide = aboutChangeSlide;
     window.currentSlide = aboutCurrentSlide;
 
-    // Initialize
-    aboutShowSlide(0);
-    setInterval(() => aboutChangeSlide(1), 5000);
-})();
+    // Initialize carousel
+    if (aboutSlides.length > 0) {
+        aboutShowSlide(0);
+        setInterval(() => aboutChangeSlide(1), 5000);
+    }
+
+    // Add smooth scrolling for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add parallax effect to hero section
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.about-hero');
+        if (hero) {
+            const rate = scrolled * -0.5;
+            hero.style.transform = `translateY(${rate}px)`;
+        }
+    });
+});
 </script>

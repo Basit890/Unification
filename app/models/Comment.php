@@ -11,12 +11,13 @@ class Comment {
             INSERT INTO comments (user_id, request_id, comment) 
             VALUES (?, ?, ?)
         ");
-        return $stmt->execute([$userId, $requestId, $comment]);
+        $result = $stmt->execute([$userId, $requestId, $comment]);
+        return $result ? $this->db->lastInsertId() : false;
     }
     
     public function getByRequestId($requestId) {
-                $stmt = $this->db->prepare("
-            SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as user_name
+        $stmt = $this->db->prepare("
+            SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, u.profile_picture
             FROM comments c 
             JOIN users u ON c.user_id = u.id 
             WHERE c.request_id = ? 
@@ -27,8 +28,8 @@ class Comment {
     }
     
     public function getAll() {
-                $stmt = $this->db->prepare("
-            SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, hr.title as request_title
+        $stmt = $this->db->prepare("
+            SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, u.profile_picture, hr.title as request_title
             FROM comments c 
             JOIN users u ON c.user_id = u.id 
             JOIN help_requests hr ON c.request_id = hr.id 
@@ -45,12 +46,24 @@ class Comment {
     
     public function getById($id) {
         $stmt = $this->db->prepare("
-            SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as user_name
+            SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, u.profile_picture
             FROM comments c 
             JOIN users u ON c.user_id = u.id 
             WHERE c.id = ?
         ");
         $stmt->execute([$id]);
         return $stmt->fetch();
+    }
+    
+    public function getStats() {
+        $stats = [];
+        
+        $stmt = $this->db->query("SELECT COUNT(*) FROM comments");
+        $stats['total'] = $stmt->fetchColumn();
+        
+        $stmt = $this->db->query("SELECT COUNT(DISTINCT request_id) FROM comments");
+        $stats['unique_requests'] = $stmt->fetchColumn();
+        
+        return $stats;
     }
 } 

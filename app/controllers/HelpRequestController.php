@@ -52,8 +52,10 @@ class HelpRequestController {
         ];
         
         if ($this->helpRequestModel->create($requestData)) {
+            // Get the created request ID
+            $requestId = $this->helpRequestModel->getLastInsertId();
             // Notify admins about new pending request
-            $this->notifyAdminsNewRequest($requestData);
+            $this->notifyAdminsNewRequest($requestId);
             return ['success' => true, 'message' => 'Help request submitted successfully! It will be reviewed by our team.'];
         } else {
             return ['success' => false, 'message' => 'Failed to create help request.'];
@@ -100,6 +102,35 @@ class HelpRequestController {
     
     public function getById($id) {
         return $this->helpRequestModel->getById($id);
+    }
+    
+    public function viewRequest($requestId) {
+        $request = $this->helpRequestModel->getById($requestId);
+        
+        if (!$request) {
+            return ['success' => false, 'message' => 'Request not found'];
+        }
+        
+        // Get related data
+        global $pdo;
+        $commentModel = new Comment($pdo);
+        $statusUpdateModel = new StatusUpdate($pdo);
+        $donationModel = new Donation($pdo);
+        
+        $comments = $commentModel->getByRequestId($requestId);
+        $status_updates = $statusUpdateModel->getByRequestId($requestId);
+        $donations = $donationModel->getByRequestId($requestId);
+        
+        $progress_percentage = $request['goal_amount'] > 0 ? ($request['current_amount'] / $request['goal_amount']) * 100 : 0;
+        
+        return [
+            'success' => true,
+            'request' => $request,
+            'comments' => $comments,
+            'status_updates' => $status_updates,
+            'donations' => $donations,
+            'progress_percentage' => $progress_percentage
+        ];
     }
     
     private function notifyAdminsNewRequest($requestData) {

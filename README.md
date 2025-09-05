@@ -1,42 +1,41 @@
-# 🚀 Unification - Community Fundraising Platform
+# Unification - Community Fundraising Platform
 
 A modern, community-driven fundraising platform built with PHP that connects donors with people in need. Built with a focus on transparency, ease of use, and community engagement.
 
-## ✨ Features
+## Features
 
-### 🏠 **Homepage & Campaigns**
+### Homepage & Campaigns
 - **Modern UI/UX**: Clean, responsive design with gradient cards and smooth animations
 - **Live Search**: Real-time campaign search with instant results
 - **Smart Filtering**: Category-based filtering and multiple sorting options
 - **Top Donors Section**: Celebrating community generosity with ranking badges
 - **Recent Posts**: Showcase latest fundraising campaigns with images
 
-### 👥 **User Management**
+### User Management
 - **Multi-User Types**: Donors, Fundraisers, and Admins
 - **Profile Management**: Complete user profiles with activity tracking
 - **Registration & Authentication**: Secure login system with session management
 
-### 💰 **Fundraising Features**
+### Fundraising Features
 - **Campaign Creation**: Easy-to-use campaign setup with image uploads
 - **Progress Tracking**: Visual progress bars and funding statistics
 - **Donation System**: Secure donation processing with transaction history
 - **Category System**: Organized campaign categories for easy discovery
 
-### 🎯 **Admin Dashboard**
+### Admin Dashboard
 - **Modern Interface**: Card-based design with interactive statistics
 - **User Management**: Comprehensive user oversight and management
 - **Campaign Oversight**: Monitor and manage all fundraising campaigns
 - **Donation Analytics**: Detailed donation reports and insights
 - **Comment Management**: Moderate community interactions
 
-### 📱 **Technical Features**
-- **Responsive Design**: Mobile-first approach for all devices
+### Technical Features
 - **Modern CSS**: CSS Grid, Flexbox, and advanced animations
 - **Font Awesome Icons**: Professional iconography throughout
 - **Dark/Light Themes**: User preference-based theming
 - **Performance Optimized**: Lazy loading and efficient code structure
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Backend**: PHP 7.4+
 - **Database**: MySQL/MariaDB
@@ -45,14 +44,14 @@ A modern, community-driven fundraising platform built with PHP that connects don
 - **Server**: Apache (XAMPP compatible)
 - **Design**: Modern CSS with gradients, shadows, and animations
 
-## 📋 Requirements
+## Requirements
 
 - PHP 7.4 or higher
 - MySQL 5.7+ or MariaDB 10.2+
 - Apache web server
 - Modern web browser with CSS Grid support
 
-## 🚀 Installation
+## Installation
 
 ### 1. **Clone the Repository**
 ```bash
@@ -75,7 +74,7 @@ cd Unification
 - Ensure PHP has file upload permissions enabled
 - Set appropriate memory limits for image processing
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 unification/
@@ -99,7 +98,7 @@ unification/
 └── README.md                  # This file
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### **Database Configuration**
 Update `app/config/Database.php` with your database credentials:
@@ -119,7 +118,7 @@ post_max_size = 10M
 max_execution_time = 300
 ```
 
-## 🎯 Usage
+## Usage
 
 ### **For Donors**
 1. Browse campaigns by category or search terms
@@ -139,7 +138,7 @@ max_execution_time = 300
 3. Monitor platform activity
 4. Generate reports and analytics
 
-## 🎨 Customization
+## Customization
 
 ### **Themes**
 The platform supports both light and dark themes. Users can toggle between themes using the theme switcher.
@@ -152,7 +151,7 @@ The platform supports both light and dark themes. Users can toggle between theme
 ### **Icons**
 Font Awesome icons are used throughout. To change icons, update the `<i class="fas fa-icon-name"></i>` tags in the view files.
 
-## 🔒 Security Features
+## Security Features
 
 - **Session Management**: Secure user session handling
 - **Input Validation**: All user inputs are sanitized
@@ -160,45 +159,38 @@ Font Awesome icons are used throughout. To change icons, update the `<i class="f
 - **SQL Injection Prevention**: Prepared statements for database queries
 - **XSS Protection**: Output escaping for user-generated content
 
-## 📱 Responsive Design
-
-The platform is built with a mobile-first approach:
-- **Mobile**: Optimized for smartphones and tablets
-- **Desktop**: Enhanced experience for larger screens
-- **Touch-Friendly**: Optimized for touch interactions
-
-## 🚀 Performance Features
+## Performance Features
 
 - **Lazy Loading**: Images load as needed
 - **Optimized CSS**: Efficient selectors and minimal redundancy
 - **Compressed Assets**: Optimized file sizes
 - **Caching Ready**: Structure supports future caching implementation
 
-## 🤝 Project Status
+## Project Status
 
 This is a **private fundraising platform** developed for community use. The codebase is not open for public contribution or copying.
 
-## 📄 License
+## License
 
 This is a **private project** and is not licensed for public use, distribution, or copying. All rights reserved.
 
-## 🆘 Support
+## Support
 
 For support and questions regarding this private platform:
 - Contact the developer directly
 - Check the documentation in the code comments
 - Review the configuration files for setup guidance
 
-## 🔄 Recent Updates
+## Recent Updates
 
-### **Latest Version Features**
-- ✅ Fixed filter bar button alignment
-- ✅ Enhanced photo/document upload capabilities
-- ✅ Modernized admin dashboard UI
-- ✅ Improved campaign search and sorting
-- ✅ Added Recent Fundraiser Posts section
-- ✅ Enhanced Top Generous Donors display
+### Latest Version Features
+- Fixed filter bar button alignment
+- Enhanced photo/document upload capabilities
+- Modernized admin dashboard UI
+- Improved campaign search and sorting
+- Added Recent Fundraiser Posts section
+- Enhanced Top Generous Donors display
 
 ---
 
-**Built with ❤️ for community fundraising**
+**Built for community fundraising**

@@ -30,8 +30,9 @@ class DonationController {
             return ['success' => false, 'message' => 'Cannot donate to this request'];
         }
         
-        if ($this->donationModel->create($userId, $requestId, $amount)) {
-            $this->createDonationNotification($requestId, $amount);
+        $donationId = $this->donationModel->create($userId, $requestId, $amount);
+        if ($donationId) {
+            $this->createDonationNotification($donationId, $requestId);
             return [
                 'success' => true, 
                 'message' => "Your donation to '{$request['title']}' was successful!"
@@ -41,15 +42,10 @@ class DonationController {
         }
     }
     
-    private function createDonationNotification($requestId, $amount) {
-        $donations = $this->donationModel->getByRequestId($requestId);
-        if (!empty($donations)) {
-            $donationId = $donations[0]['id'];
-            
-            global $pdo;
-            $notificationController = new NotificationController($pdo);
-            $notificationController->notifyDonation($donationId, $requestId);
-        }
+    private function createDonationNotification($donationId, $requestId) {
+        global $pdo;
+        $notificationController = new NotificationController($pdo);
+        $notificationController->notifyDonation($donationId, $requestId);
     }
     
     public function getByUserId($userId) {

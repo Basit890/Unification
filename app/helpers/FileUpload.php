@@ -70,22 +70,35 @@ class FileUpload {
             return ['success' => false, 'error' => 'Invalid file type. Allowed: ' . implode(', ', $this->allowedTypes)];
         }
         
+        // MIME type validation (more flexible for images)
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $file['tmp_name']);
         finfo_close($finfo);
         
         $allowedMimes = [
-            'jpg' => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'png' => 'image/png',
-            'gif' => 'image/gif',
-            'pdf' => 'application/pdf',
-            'doc' => 'application/msword',
-            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            'jpg' => ['image/jpeg', 'image/jpg'],
+            'jpeg' => ['image/jpeg', 'image/jpg'],
+            'png' => ['image/png'],
+            'gif' => ['image/gif'],
+            'pdf' => ['application/pdf'],
+            'doc' => ['application/msword'],
+            'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document']
         ];
         
-        if (!isset($allowedMimes[$fileExtension]) || $allowedMimes[$fileExtension] !== $mimeType) {
-            return ['success' => false, 'error' => 'Invalid MIME type: ' . $mimeType];
+        // For images, be more flexible with MIME types
+        if ($type === 'image') {
+            if (!in_array($mimeType, $allowedMimes[$fileExtension] ?? [])) {
+                // Additional check for common image MIME type variations
+                $imageMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!in_array($mimeType, $imageMimes)) {
+                    return ['success' => false, 'error' => 'Invalid MIME type: ' . $mimeType];
+                }
+            }
+        } else {
+            // For documents, be strict
+            if (!isset($allowedMimes[$fileExtension]) || !in_array($mimeType, $allowedMimes[$fileExtension])) {
+                return ['success' => false, 'error' => 'Invalid MIME type: ' . $mimeType];
+            }
         }
         
         if (!is_dir($this->uploadDir)) {

@@ -23,23 +23,19 @@ class CommentController {
             return ['success' => false, 'message' => 'Comment is too long (max 1000 characters)'];
         }
         
-        if ($this->commentModel->create($userId, $requestId, $comment)) {
-            $this->createCommentNotification($requestId, $userId);
+        $commentId = $this->commentModel->create($userId, $requestId, $comment);
+        if ($commentId) {
+            $this->createCommentNotification($commentId, $requestId);
             return ['success' => true, 'message' => 'Comment added successfully!'];
         } else {
             return ['success' => false, 'message' => 'Failed to add comment.'];
         }
     }
     
-    private function createCommentNotification($requestId, $commenterId) {
-        $comment = $this->commentModel->getByRequestId($requestId);
-        if (!empty($comment)) {
-            $commentId = $comment[0]['id'];
-            
-            global $pdo;
-            $notificationController = new NotificationController($pdo);
-            $notificationController->notifyComment($commentId, $requestId);
-        }
+    private function createCommentNotification($commentId, $requestId) {
+        global $pdo;
+        $notificationController = new NotificationController($pdo);
+        $notificationController->notifyComment($commentId, $requestId);
     }
     
     public function getByRequestId($requestId) {

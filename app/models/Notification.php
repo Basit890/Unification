@@ -52,9 +52,19 @@ class Notification {
     
     // Mark all notifications as read for a user
     public function markAllAsRead($userId) {
-        $sql = "UPDATE notifications SET is_read = 1 WHERE user_id = ?";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$userId]);
+        try {
+            $sql = "UPDATE notifications SET is_read = 1 WHERE user_id = ? AND is_read = 0";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute([$userId]);
+            
+            // Debug: Log the number of affected rows
+            error_log("Mark all as read - affected rows: " . $stmt->rowCount());
+            
+            return $result;
+        } catch (Exception $e) {
+            error_log("Error in markAllAsRead: " . $e->getMessage());
+            return false;
+        }
     }
     
     // Delete old notifications (older than 30 days)

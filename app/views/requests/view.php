@@ -1,33 +1,6 @@
 <?php
-$request_id = $_GET['id'] ?? 0;
-$request = $helpRequestController->getById($request_id);
-
-if (!$request) {
-    echo "<p>Request not found.</p>";
-    return;
-}
-
-$comments = $commentController->getByRequestId($request_id);
-$status_updates = $statusUpdateController->getByRequestId($request_id);
-$donations = $donationController->getByRequestId($request_id);
-
-$progress_percentage = $request['goal_amount'] > 0 ? ($request['current_amount'] / $request['goal_amount']) * 100 : 0;
-
-function formatFileSize($bytes) {
-    if ($bytes >= 1073741824) {
-        return number_format($bytes / 1073741824, 2) . ' GB';
-    } elseif ($bytes >= 1048576) {
-        return number_format($bytes / 1048576, 2) . ' MB';
-    } elseif ($bytes >= 1024) {
-        return number_format($bytes / 1024, 2) . ' KB';
-    } elseif ($bytes > 1) {
-        return $bytes . ' bytes';
-    } elseif ($bytes == 1) {
-        return $bytes . ' byte';
-    } else {
-        return '0 bytes';
-    }
-}
+// View data is prepared by the controller and passed to this view
+// $request, $comments, $status_updates, $donations, $progress_percentage are available
 ?>
 
 <div class="two-column">
@@ -81,7 +54,7 @@ function formatFileSize($bytes) {
                     $fileExtension = strtolower(pathinfo($request['document_path'], PATHINFO_EXTENSION));
                     $fileName = basename($request['document_path']);
                     $fileSize = file_exists($request['document_path']) ? filesize($request['document_path']) : 0;
-                    $fileSizeFormatted = $fileSize > 0 ? formatFileSize($fileSize) : 'Unknown size';
+                    $fileSizeFormatted = $fileSize > 0 ? FileUtils::formatFileSize($fileSize) : 'Unknown size';
                     ?>
                     <div class="document-preview">
                         <div class="document-icon">
@@ -129,23 +102,13 @@ function formatFileSize($bytes) {
         <?php endif; ?>
         
         
-        <?php if (!empty($status_updates)): ?>
-            <div class="card">
-                <h3>Status Updates</h3>
-                <?php foreach ($status_updates as $update): ?>
-                    <div class="status-update">
-                        <p><?php echo nl2br(htmlspecialchars($update['update_text'])); ?></p>
-                        <small><?php echo date('M j, Y g:i A', strtotime($update['created_at'])); ?></small>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-        
-        
-        <?php if (Session::isLoggedIn() && (Session::getUserId() == $request['user_id'] || Session::isAdmin())): ?>
-            <div class="card">
-                <h3>Add Status Update</h3>
-                <form method="POST">
+        <!-- Status Updates Section -->
+        <div class="card" id="updates">
+            <h3>Status Updates</h3>
+            
+            <?php if (Session::isLoggedIn() && (Session::getUserId() == $request['user_id'] || Session::isAdmin())): ?>
+                <!-- Add Status Update Form -->
+                <form method="POST" style="margin-bottom: 1.5rem;">
                     <input type="hidden" name="action" value="add_status_update">
                     <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
                     <div class="form-group">
@@ -153,27 +116,36 @@ function formatFileSize($bytes) {
                     </div>
                     <button type="submit" class="btn">Add Update</button>
                 </form>
-            </div>
-        <?php endif; ?>
-        
-        
-        <?php if (Session::isLoggedIn() && (Session::getUserId() == $request['user_id'] || Session::isAdmin())): ?>
-            <div class="card">
-                <h3>Update Request Status</h3>
-                <form method="POST">
-                    <input type="hidden" name="action" value="update_request_status">
-                    <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
-                    <div class="form-group">
-                        <select name="status" required>
-                            <option value="">Select Status</option>
-                            <option value="completed" <?php echo $request['status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
-                            <option value="closed" <?php echo $request['status'] === 'closed' ? 'selected' : ''; ?>>Closed</option>
-                        </select>
+                
+                <!-- Update Request Status Form -->
+                <div style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding-top: 1.5rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin: 0 0 1rem 0; color: var(--text-dark); font-size: 1.1rem;">Update Request Status</h4>
+                    <form method="POST">
+                        <input type="hidden" name="action" value="update_request_status">
+                        <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
+                        <div class="form-group">
+                            <select name="status" required>
+                                <option value="">Select Status</option>
+                                <option value="completed" <?php echo $request['status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
+                                <option value="closed" <?php echo $request['status'] === 'closed' ? 'selected' : ''; ?>>Closed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Update Status</button>
+                    </form>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (empty($status_updates)): ?>
+                <p>No status updates yet.</p>
+            <?php else: ?>
+                <?php foreach ($status_updates as $update): ?>
+                    <div class="status-update">
+                        <p><?php echo nl2br(htmlspecialchars($update['update_text'])); ?></p>
+                        <small><?php echo date('M j, Y g:i A', strtotime($update['created_at'])); ?></small>
                     </div>
-                    <button type="submit" class="btn">Update Status</button>
-                </form>
-            </div>
-        <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
     </div>
     
     <div>
@@ -210,60 +182,87 @@ function formatFileSize($bytes) {
         
         
         <?php if (!empty($donations)): ?>
-            <div class="card">
+            <div class="card" id="donations">
                 <h3>Recent Donations</h3>
                 <?php foreach (array_slice($donations, 0, 10) as $donation): ?>
-                    <div style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                        <strong><?php echo htmlspecialchars($donation['donor_name']); ?></strong> donated 
-                        <strong>৳<?php echo number_format($donation['amount'], 2); ?></strong>
-                        <br>
-                        <small><?php echo date('M j, Y g:i A', strtotime($donation['created_at'])); ?></small>
+                    <div class="donation-item">
+                        <div class="donation-header">
+                            <?php echo AvatarHelper::render($donation['profile_picture'], $donation['donor_name'], 'sm'); ?>
+                            <div class="donation-info">
+                                <div class="donation-amount">
+                                    <strong><?php echo htmlspecialchars($donation['donor_name']); ?></strong> donated 
+                                    <strong>৳<?php echo number_format($donation['amount'], 2); ?></strong>
+                                </div>
+                                <small class="donation-date"><?php echo date('M j, Y g:i A', strtotime($donation['created_at'])); ?></small>
+                            </div>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
+        
+        <!-- Comments Section -->
+        <div class="card" id="comments">
+            <h3>Comments</h3>
+            
+            <?php if (Session::isLoggedIn()): ?>
+                <form method="POST" style="margin-bottom: 1.5rem;">
+                    <input type="hidden" name="action" value="add_comment">
+                    <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
+                    <div class="form-group">
+                        <textarea name="comment" rows="3" placeholder="Add a comment..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Add Comment</button>
+                </form>
+            <?php endif; ?>
+            
+            <?php if (empty($comments)): ?>
+                <p>No comments yet. Be the first to comment!</p>
+            <?php else: ?>
+                <?php foreach ($comments as $comment): ?>
+                    <div class="comment">
+                        <div class="comment-header">
+                            <?php echo AvatarHelper::render($comment['profile_picture'], $comment['user_name'], 'sm'); ?>
+                            <div class="comment-meta">
+                                <strong><?php echo htmlspecialchars($comment['user_name']); ?></strong>
+                                <span><?php echo date('M j, Y g:i A', strtotime($comment['created_at'])); ?></span>
+                                <?php if (Session::isAdmin()): ?>
+                                    <form method="POST" style="display: inline; float: right;">
+                                        <input type="hidden" name="action" value="delete_comment">
+                                        <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
+                                        <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
+                                        <button type="submit" class="btn btn-danger" style="padding: 2px 6px; font-size: 0.7rem;" onclick="return confirm('Delete this comment?')">Delete</button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
-
-<div class="card" style="margin-top: 2rem;">
-    <h3>Comments</h3>
-    
-    <?php if (Session::isLoggedIn()): ?>
-        <form method="POST" style="margin-bottom: 2rem;">
-            <input type="hidden" name="action" value="add_comment">
-            <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
-            <div class="form-group">
-                <textarea name="comment" rows="3" placeholder="Add a comment..." required></textarea>
-            </div>
-            <button type="submit" class="btn">Add Comment</button>
-        </form>
-    <?php endif; ?>
-    
-    <?php if (empty($comments)): ?>
-        <p>No comments yet. Be the first to comment!</p>
-    <?php else: ?>
-        <?php foreach ($comments as $comment): ?>
-            <div class="comment">
-                <div class="comment-meta">
-                    <strong><?php echo htmlspecialchars($comment['user_name']); ?></strong>
-                    <span><?php echo date('M j, Y g:i A', strtotime($comment['created_at'])); ?></span>
-                    <?php if (Session::isAdmin()): ?>
-                        <form method="POST" style="display: inline; float: right;">
-                            <input type="hidden" name="action" value="delete_comment">
-                            <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
-                            <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
-                            <button type="submit" class="btn btn-danger" style="padding: 2px 6px; font-size: 0.7rem;" onclick="return confirm('Delete this comment?')">Delete</button>
-                        </form>
-                    <?php endif; ?>
-                </div>
-                <p><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
-            </div>
-        <?php endforeach; ?>
-    <?php endif; ?>
-</div>
-
 <style>
+/* Smooth scrolling for anchor links */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Highlight target sections when navigated to via anchor */
+#comments:target,
+#donations:target,
+#updates:target {
+    animation: highlight 2s ease-in-out;
+}
+
+@keyframes highlight {
+    0% { background-color: rgba(0, 166, 81, 0.1); }
+    50% { background-color: rgba(0, 166, 81, 0.2); }
+    100% { background-color: transparent; }
+}
+
 .request-main {
     display: flex;
     flex-direction: column;
@@ -429,6 +428,81 @@ function formatFileSize($bytes) {
     border-color: var(--primary-color-light);
 }
 
+/* Status Updates Styling */
+.status-update {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: rgba(0, 166, 81, 0.05);
+    border-left: 4px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(0, 166, 81, 0.1);
+}
+
+.status-update p {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.status-update small {
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+
+/* Status Updates Card Styling */
+#updates .form-group {
+    margin-bottom: 1rem;
+}
+
+#updates .btn {
+    margin-right: 0.5rem;
+}
+
+#updates .btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    border: 1px solid var(--secondary-color);
+}
+
+#updates .btn-secondary:hover {
+    background-color: var(--secondary-color-hover);
+    border-color: var(--secondary-color-hover);
+}
+
+/* Comments Styling */
+.comment {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.comment-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.comment-meta strong {
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+.comment-meta span {
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+
+.comment p {
+    margin: 0;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
 @media (max-width: 768px) {
     .meta-grid {
         grid-template-columns: 1fr;
@@ -441,5 +515,43 @@ function formatFileSize($bytes) {
     .request-description {
         padding: 1.5rem;
     }
+    
+    .two-column {
+        flex-direction: column;
+    }
 }
-</style> 
+</style>
+
+<script>
+// Enhanced anchor scrolling with smooth behavior
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if there's a hash in the URL
+    if (window.location.hash) {
+        const targetElement = document.querySelector(window.location.hash);
+        if (targetElement) {
+            // Scroll to the element with a slight delay to ensure page is fully loaded
+            setTimeout(() => {
+                targetElement.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        }
+    }
+    
+    // Add click handlers for any internal anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                targetElement.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script> 

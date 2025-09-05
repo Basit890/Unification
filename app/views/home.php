@@ -29,71 +29,101 @@ if ($category_filter && !empty($category_filter)) {
 ?>
 
 <div class="home-hero">
-    <h1 class="hero-title">Welcome to Community Help</h1>
-    <p class="hero-subtitle">Help others achieve their goals or get support for your own cause. Together, we can make a difference!</p>
-    
-    <div class="home-stats">
-        <div class="home-stat">
-            <div class="stat-number"><?php echo count($allRequests); ?></div>
-            <div class="stat-label">Active Campaigns</div>
-        </div>
-        <div class="home-stat">
-            <div class="stat-number"><?php echo count($categories); ?></div>
-            <div class="stat-label">Categories</div>
-        </div>
-        <div class="home-stat">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Community Driven</div>
+    <div class="hero-background">
+        <div class="hero-pattern"></div>
+    </div>
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>Making a Difference Since 2021</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">Welcome to</span>
+                <span class="title-line highlight">Community Help</span>
+            </h1>
+            <p class="hero-subtitle">Help others achieve their goals or get support for your own cause. Together, we can make a difference through transparent, direct giving!</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" data-count="<?php echo count($allRequests); ?>">0+</span>
+                        <span class="stat-label">Active Campaigns</span>
+                    </div>
+                </div>
+                <div class="hero-stat" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" data-count="<?php echo count($categories); ?>">0+</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                </div>
+                <div class="hero-stat" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Community Driven</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 
 <?php if (!empty($topDonors)): ?>
-<div class="top-donors-section">
+<div class="top-donors-section" data-aos="fade-up">
     <div class="section-header">
-        <h2><i class="fas fa-trophy"></i> Top Generous Donors</h2>
-        <p>Celebrating our community's most generous supporters</p>
+        <h2>Top Generous Donors</h2>
+        <p class="section-subtitle">Celebrating our community's most generous supporters</p>
     </div>
     
     <div class="top-donors-grid">
         <?php foreach ($topDonors as $index => $donor): ?>
-            <div class="donor-card">
-                <div class="donor-rank">
-                    <?php if ($index === 0): ?>
-                        <div class="rank-badge gold">🥇</div>
-                    <?php elseif ($index === 1): ?>
-                        <div class="rank-badge silver">🥈</div>
-                    <?php elseif ($index === 2): ?>
-                        <div class="rank-badge bronze">🥉</div>
-                    <?php else: ?>
-                        <div class="rank-badge">#<?php echo $index + 1; ?></div>
-                    <?php endif; ?>
-                </div>
-                
-                <div class="donor-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                
-                <div class="donor-info">
-                    <h3 class="donor-name"><?php echo htmlspecialchars($donor['donor_name']); ?></h3>
-                    <div class="donor-stats">
-                        <span class="donation-count">
-                            <i class="fas fa-heart"></i>
-                            <?php echo $donor['donation_count']; ?> donation<?php echo $donor['donation_count'] > 1 ? 's' : ''; ?>
-                        </span>
+            <div class="donor-card" data-aos="zoom-in" data-aos-delay="<?php echo ($index + 1) * 100; ?>">
+                <div class="donor-card-inner">
+                    <div class="donor-rank">
+                        <?php if ($index === 0): ?>
+                            <div class="rank-badge gold">🥇</div>
+                        <?php elseif ($index === 1): ?>
+                            <div class="rank-badge silver">🥈</div>
+                        <?php elseif ($index === 2): ?>
+                            <div class="rank-badge bronze">🥉</div>
+                        <?php else: ?>
+                            <div class="rank-badge">#<?php echo $index + 1; ?></div>
+                        <?php endif; ?>
                     </div>
-                </div>
-                
-                <div class="donor-amount">
-                    <span class="amount-value">৳<?php echo number_format($donor['total_donated'], 2); ?></span>
-                    <span class="amount-label">Total Donated</span>
+                    
+                    <div class="donor-avatar">
+                        <?php echo AvatarHelper::render($donor['profile_picture'], $donor['donor_name'], 'lg'); ?>
+                    </div>
+                    
+                    <div class="donor-info">
+                        <h3 class="donor-name"><?php echo htmlspecialchars($donor['donor_name']); ?></h3>
+                        <div class="donor-stats">
+                            <span class="donation-count">
+                                <i class="fas fa-heart"></i>
+                                <?php echo $donor['donation_count']; ?> donation<?php echo $donor['donation_count'] > 1 ? 's' : ''; ?>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="donor-amount">
+                        <span class="amount-value">৳<?php echo number_format($donor['total_donated'], 2); ?></span>
+                        <span class="amount-label">Total Donated</span>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
     
-    <div class="donors-inspiration">
+    <div class="donors-inspiration" data-aos="fade-up" data-aos-delay="600">
         <i class="fas fa-sparkles"></i>
         <p><strong>Be inspired!</strong> Join our community of generous donors and make a difference today.</p>
     </div>
@@ -101,132 +131,53 @@ if ($category_filter && !empty($category_filter)) {
 <?php endif; ?>
 
 
-<div class="recent-posts-section">
-    <div class="section-header">
-        <h2><i class="fas fa-newspaper"></i> Recent Fundraiser Posts</h2>
-        <p>Stay updated with the latest campaigns and stories from our community</p>
-    </div>
-    
-    <div class="recent-posts-grid">
-        <?php
-        // Get recent posts (limit to 6 for homepage)
-        $recentPosts = array_slice($requests, 0, 6);
-        foreach ($recentPosts as $post):
-        ?>
-            <div class="post-card">
-                
-                <div class="post-image-section">
-                    <?php if ($post['image_path'] && file_exists($post['image_path'])): ?>
-                        <img src="<?php echo htmlspecialchars($post['image_path']); ?>" 
-                             alt="<?php echo htmlspecialchars($post['title']); ?>" 
-                             class="post-image" 
-                             loading="lazy">
-                    <?php else: ?>
-                        <div class="post-image-placeholder">
-                            <i class="fas fa-image"></i>
-                            <span>No Image</span>
-                        </div>
-                    <?php endif; ?>
-                    
-                    
-                    <div class="category-badge-overlay">
-                        <span class="category-badge"><?php echo htmlspecialchars(ucfirst($post['category'])); ?></span>
-                    </div>
+
+
+<div class="filter-bar" data-aos="fade-up">
+    <div class="filter-container">
+        <div class="filter-controls">
+            <div class="filter-header">
+                <h3>Find Your Perfect Campaign</h3>
+                <p>Discover campaigns that matter to you</p>
+            </div>
+            <div class="filter-form-row">
+                <div class="form-group search-group">
+                    <label for="search">
+                        <i class="fas fa-search"></i>
+                        Search Campaigns
+                    </label>
+                    <input type="search" id="search" placeholder="Search by title, description, or creator..." oninput="filterCampaigns()">
                 </div>
                 
-                <div class="post-header">
-                    <div class="poster-info">
-                        <div class="poster-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="poster-details">
-                            <h4 class="poster-name"><?php echo htmlspecialchars($post['user_name']); ?></h4>
-                            <span class="post-date"><?php echo date('M j, Y', strtotime($post['created_at'])); ?></span>
-                        </div>
-                    </div>
+                <div class="form-group category-group">
+                    <label for="category">
+                        <i class="fas fa-tags"></i>
+                        Category
+                    </label>
+                    <select name="category" id="category" onchange="filterCampaigns()">
+                        <option value="">All Categories</option>
+                        <?php foreach ($categories as $key => $name): ?>
+                            <option value="<?php echo $key; ?>" <?php echo $category_filter === $key ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($name); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 
-                <div class="post-content">
-                    <h3 class="post-title"><?php echo htmlspecialchars($post['title']); ?></h3>
-                    <p class="post-description"><?php echo htmlspecialchars(substr($post['description'], 0, 100)) . '...'; ?></p>
-                </div>
-                
-                <div class="post-progress">
-                    <div class="progress-info">
-                        <span class="current-amount">৳<?php echo number_format($post['current_amount'], 2); ?></span>
-                        <span class="goal-amount">of ৳<?php echo number_format($post['goal_amount'], 2); ?></span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: <?php echo min(($post['current_amount'] / $post['goal_amount']) * 100, 100); ?>%"></div>
-                    </div>
-                    <span class="progress-percentage"><?php echo number_format(($post['current_amount'] / $post['goal_amount']) * 100, 1); ?>% funded</span>
-                </div>
-                
-                <div class="post-actions">
-                    <a href="index.php?page=view_request&id=<?php echo $post['id']; ?>" class="read-more-btn">
-                        <i class="fas fa-arrow-right"></i>
-                        Read More
-                    </a>
+                <div class="form-group sort-group">
+                    <label for="sort">
+                        <i class="fas fa-sort"></i>
+                        Sort By
+                    </label>
+                    <select name="sort" id="sort" onchange="sortCampaigns()">
+                        <option value="created_at" <?php echo $sort_by === 'created_at' ? 'selected' : ''; ?>>Newest First</option>
+                        <option value="progress" <?php echo $sort_by === 'progress' ? 'selected' : ''; ?>>Most Progress</option>
+                        <option value="goal" <?php echo $sort_by === 'goal' ? 'selected' : ''; ?>>Highest Goal</option>
+                        <option value="title" <?php echo $sort_by === 'title' ? 'selected' : ''; ?>>Alphabetical</option>
+                    </select>
                 </div>
             </div>
-        <?php endforeach; ?>
-    </div>
-    
-    <div class="posts-footer">
-        <a href="index.php" class="view-all-btn">
-            <i class="fas fa-list"></i>
-            View All Campaigns
-        </a>
-    </div>
-</div>
-
-
-<div class="filter-bar">
-    <div class="filter-container">
-        <div class="form-group search-group">
-            <label for="search">
-                <i class="fas fa-search"></i>
-                Search Campaigns
-            </label>
-            <input type="search" id="search" placeholder="Search by title, description, or creator..." oninput="filterCampaigns()">
-        </div>
-        
-        <div class="form-group category-group">
-            <label for="category">
-                <i class="fas fa-tags"></i>
-                Category
-            </label>
-            <select name="category" id="category" onchange="filterCampaigns()">
-                <option value="">All Categories</option>
-                <?php foreach ($categories as $key => $name): ?>
-                    <option value="<?php echo $key; ?>" <?php echo $category_filter === $key ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($name); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        
-        <div class="form-group sort-group">
-            <label for="sort">
-                <i class="fas fa-sort"></i>
-                Sort By
-            </label>
-            <select name="sort" id="sort" onchange="sortCampaigns()">
-                <option value="created_at" <?php echo $sort_by === 'created_at' ? 'selected' : ''; ?>>Newest First</option>
-                <option value="progress" <?php echo $sort_by === 'progress' ? 'selected' : ''; ?>>Most Progress</option>
-                <option value="goal" <?php echo $sort_by === 'goal' ? 'selected' : ''; ?>>Highest Goal</option>
-                <option value="title" <?php echo $sort_by === 'title' ? 'selected' : ''; ?>>Alphabetical</option>
-            </select>
-        </div>
-        
-        <div class="filter-actions">
-            <button type="button" class="btn btn-secondary clear-btn" onclick="clearFilters()">
-                <i class="fas fa-times"></i>
-                Clear
-            </button>
-            <button type="button" class="btn toggle-btn" onclick="toggleView()" data-tooltip="Toggle between grid and list view">
-                <i class="fas fa-th-large" id="view-icon"></i>
-            </button>
+            
         </div>
     </div>
     
@@ -311,7 +262,9 @@ if ($category_filter && !empty($category_filter)) {
                     <p style="color: var(--text-light); margin-bottom: 1rem; line-height: 1.5;"><?php echo htmlspecialchars(substr($request['description'], 0, 120)) . '...'; ?></p>
                     
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                        <div style="width: 30px; height: 30px; background: var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 0.5rem;"><?php echo strtoupper(substr($request['user_name'], 0, 1)); ?></div>
+                        <div style="margin-right: 0.5rem;">
+                            <?php echo AvatarHelper::render($request['profile_picture'], $request['user_name'], 'sm'); ?>
+                        </div>
                         <span style="font-weight: 500;"><?php echo htmlspecialchars($request['user_name']); ?></span>
                     </div>
                     
@@ -356,18 +309,7 @@ function clearFilters() {
     filterCampaigns();
 }
 
-function toggleView() {
-    const grid = document.getElementById('campaigns-grid');
-    const icon = document.getElementById('view-icon');
-    
-    if (grid.classList.contains('list-view')) {
-        grid.classList.remove('list-view');
-        icon.textContent = '📋';
-    } else {
-        grid.classList.add('list-view');
-        icon.textContent = '🔲';
-    }
-}
+// Toggle functionality removed - using list view as default
 
 function filterCampaigns() {
     const searchTerm = document.getElementById('search').value.toLowerCase();
@@ -382,7 +324,9 @@ function filterCampaigns() {
         const matchesCategory = !categoryFilter || category === categoryFilter;
         
         if (matchesSearch && matchesCategory) {
-            card.style.display = 'block';
+            card.style.display = 'flex';
+            card.style.flexDirection = 'row';
+            card.style.alignItems = 'center';
             visibleCount++;
         } else {
             card.style.display = 'none';
@@ -406,7 +350,8 @@ function filterCampaigns() {
                     <p>Try adjusting your search criteria or browse all categories.</p>
                 </div>
             `;
-            grid.appendChild(noResultsDiv);
+            // Insert at the beginning of the grid
+            grid.insertBefore(noResultsDiv, grid.firstChild);
         }
     } else {
         if (noResultsMsg) {
@@ -675,298 +620,11 @@ style.textContent = `
         color: var(--text-primary);
     }
     
-    /* Recent Posts Section */
-    .recent-posts-section {
-        background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 255, 255, 0.02) 100%);
-        border-radius: 24px;
-        padding: 3rem 2rem;
-        margin: 3rem 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border: 1px solid var(--border-color);
-        position: relative;
-        overflow: hidden;
-    }
     
-    .recent-posts-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-    }
     
-    .recent-posts-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
     
-    .post-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-        border-radius: 20px;
-        padding: 0;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
     
-    .post-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-    }
     
-    .post-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-    
-    .post-card:hover::before {
-        transform: scaleX(1);
-    }
-    
-    /* Post Image Section */
-    .post-image-section {
-        position: relative;
-        height: 200px;
-        overflow: hidden;
-        border-radius: 20px 20px 0 0;
-    }
-    
-    .post-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-    
-    .post-card:hover .post-image {
-        transform: scale(1.05);
-    }
-    
-    .post-image-placeholder {
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        gap: 0.5rem;
-    }
-    
-    .post-image-placeholder i {
-        font-size: 2.5rem;
-        opacity: 0.8;
-    }
-    
-    .post-image-placeholder span {
-        font-size: 0.9rem;
-        font-weight: 600;
-        opacity: 0.9;
-    }
-    
-    .category-badge-overlay {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        z-index: 2;
-    }
-    
-    .category-badge {
-        background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
-        color: white;
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    
-    .post-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 1.5rem;
-        padding: 0 2rem;
-        padding-top: 1.5rem;
-    }
-    
-    .poster-info {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-    
-    .poster-avatar {
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.2rem;
-    }
-    
-    .poster-details h4 {
-        margin: 0 0 0.25rem 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-    
-    .post-date {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-    }
-    
-    .post-category {
-        margin-top: 0.5rem;
-    }
-    
-    .category-badge {
-        background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
-        color: white;
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .post-content {
-        margin-bottom: 1.5rem;
-        padding: 0 2rem;
-    }
-    
-    .post-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-        color: var(--text-primary);
-        line-height: 1.4;
-    }
-    
-    .post-description {
-        color: var(--text-secondary);
-        line-height: 1.6;
-        margin: 0;
-    }
-    
-    .post-progress {
-        margin-bottom: 1.5rem;
-        padding: 0 2rem;
-    }
-    
-    .progress-info {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.75rem;
-        align-items: center;
-    }
-    
-    .current-amount {
-        font-weight: 700;
-        color: var(--primary-color);
-        font-size: 1.1rem;
-    }
-    
-    .goal-amount {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-    }
-    
-    .progress-bar {
-        height: 8px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-        overflow: hidden;
-        margin-bottom: 0.75rem;
-    }
-    
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        border-radius: 4px;
-        transition: width 0.3s ease;
-    }
-    
-    .progress-percentage {
-        text-align: center;
-        font-weight: 600;
-        color: var(--primary-color);
-        font-size: 0.9rem;
-    }
-    
-    .post-actions {
-        text-align: center;
-        padding: 0 2rem 2rem;
-    }
-    
-    .read-more-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-    }
-    
-    .read-more-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        text-decoration: none;
-        color: white;
-    }
-    
-    .posts-footer {
-        text-align: center;
-        margin-top: 2rem;
-    }
-    
-    .view-all-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
-        padding: 1rem 2rem;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .view-all-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
-        text-decoration: none;
-        color: var(--text-primary);
-    }
     
     /* Enhanced Filter Bar */
     .filter-bar {
@@ -1131,68 +789,71 @@ style.textContent = `
         margin: 0;
     }
     
-    /* List View Styles */
-    .list-view {
+    /* Default List View Styles */
+    .grid {
         grid-template-columns: 1fr !important;
         gap: 1rem !important;
     }
     
-    .list-view .campaign-card {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        padding: 1.5rem;
+    .campaign-card {
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.5rem !important;
+        padding: 1.5rem !important;
         border-radius: 12px;
         transition: all 0.3s ease;
+        flex-direction: row !important;
     }
     
-    .list-view .campaign-card:hover {
+    .campaign-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
     
-    .list-view .request-image,
-    .list-view div[style*="height: 200px"] {
-        width: 180px;
+    .request-image,
+    div[style*="height: 200px"] {
+        width: 180px !important;
         height: 120px !important;
         margin-bottom: 0 !important;
-        flex-shrink: 0;
+        flex-shrink: 0 !important;
         border-radius: 8px;
         object-fit: cover;
+        display: block !important;
     }
     
-    .list-view .campaign-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+    .campaign-content {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        width: calc(100% - 180px - 1.5rem) !important;
     }
     
-    .list-view h3 {
+    .campaign-card h3 {
         margin-bottom: 0.25rem !important;
         font-size: 1.4rem;
     }
     
-    .list-view p {
+    .campaign-card p {
         margin-bottom: 0.5rem !important;
         line-height: 1.6;
     }
     
-    .list-view .campaign-meta {
+    .campaign-meta {
         display: flex;
         align-items: center;
         gap: 1rem;
         margin-bottom: 0.5rem;
     }
     
-    .list-view .campaign-actions {
+    .campaign-actions {
         display: flex;
         align-items: center;
         gap: 1rem;
         margin-top: auto;
     }
     
-    .list-view .progress-section {
+    .progress-section {
         flex: 1;
         max-width: 300px;
     }
@@ -1208,8 +869,7 @@ style.textContent = `
             justify-content: center;
         }
         
-        .top-donors-grid,
-        .recent-posts-grid {
+        .top-donors-grid {
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         }
     }
@@ -1219,14 +879,12 @@ style.textContent = `
             font-size: 1.8rem;
         }
         
-        .top-donors-section,
-        .recent-posts-section {
+        .top-donors-section {
             padding: 2rem 1rem;
             margin: 2rem 0;
         }
         
-        .top-donors-grid,
-        .recent-posts-grid {
+        .top-donors-grid {
             grid-template-columns: 1fr;
             gap: 1.5rem;
         }
@@ -1235,27 +893,94 @@ style.textContent = `
             padding: 1.5rem;
         }
         
-        .list-view .campaign-card {
+        .campaign-card {
             flex-direction: column;
             align-items: stretch;
             gap: 1rem;
         }
         
-        .list-view .request-image,
-        .list-view div[style*="height: 200px"] {
+        .request-image,
+        div[style*="height: 200px"] {
             width: 100%;
             height: 200px !important;
         }
         
-        .list-view .campaign-meta {
+        .campaign-meta {
             flex-wrap: wrap;
         }
         
-        .list-view .campaign-actions {
+        .campaign-actions {
             justify-content: center;
         }
     }
 `;
 document.head.appendChild(style);
+
+// AOS (Animate On Scroll) initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS if available
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    }
+
+    // Counter animation for hero stats
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number[data-count]');
+        
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-count'));
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16); // 60fps
+            let current = 0;
+            
+            // Get the suffix from the current text content
+            const currentText = counter.textContent;
+            const suffix = currentText.replace(/^\d+/, '');
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                counter.textContent = Math.floor(current) + suffix;
+            }, 16);
+        });
+    }
+
+    // Start counter animation immediately when page loads
+    setTimeout(() => {
+        animateCounters();
+    }, 300);
+
+    // Add smooth scrolling for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add parallax effect to hero section
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.home-hero');
+        if (hero) {
+            const rate = scrolled * -0.3;
+            hero.style.transform = `translateY(${rate}px)`;
+        }
+    });
+});
 </script>
         

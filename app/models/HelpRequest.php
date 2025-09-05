@@ -14,7 +14,7 @@ class HelpRequest {
             ) VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
         
-        return $stmt->execute([
+        $result = $stmt->execute([
             $data['user_id'],
             $data['title'],
             $data['description'],
@@ -23,11 +23,17 @@ class HelpRequest {
             $data['image_path'] ?? null,
             $data['document_path'] ?? null
         ]);
+        
+        return $result;
+    }
+    
+    public function getLastInsertId() {
+        return $this->db->lastInsertId();
     }
     
     public function getApprovedRequests($filters = []) {
         $sql = "
-            SELECT hr.*, CONCAT(u.first_name, ' ', u.last_name) as user_name 
+            SELECT hr.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, u.profile_picture 
             FROM help_requests hr 
             JOIN users u ON hr.user_id = u.id 
             WHERE hr.status = 'approved'
@@ -90,7 +96,7 @@ class HelpRequest {
     
     public function getSuccessStories() {
         $stmt = $this->db->prepare("
-            SELECT hr.*, CONCAT(u.first_name, ' ', u.last_name) as user_name 
+            SELECT hr.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, u.profile_picture 
             FROM help_requests hr 
             JOIN users u ON hr.user_id = u.id 
             WHERE hr.status IN ('completed', 'closed') 

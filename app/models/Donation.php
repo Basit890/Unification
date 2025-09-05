@@ -15,6 +15,7 @@ class Donation {
                 VALUES (?, ?, ?)
             ");
             $stmt->execute([$userId, $requestId, $amount]);
+            $donationId = $this->db->lastInsertId();
             
             $stmt = $this->db->prepare("
                 UPDATE help_requests 
@@ -24,7 +25,7 @@ class Donation {
             $stmt->execute([$amount, $requestId]);
             
             $this->db->commit();
-            return true;
+            return $donationId;
         } catch (Exception $e) {
             $this->db->rollBack();
             return false;
@@ -45,7 +46,7 @@ class Donation {
     
     public function getByRequestId($requestId) {
         $stmt = $this->db->prepare("
-            SELECT d.*, CONCAT(u.first_name, ' ', u.last_name) as donor_name 
+            SELECT d.*, CONCAT(u.first_name, ' ', u.last_name) as donor_name, u.profile_picture
             FROM donations d 
             JOIN users u ON d.user_id = u.id 
             WHERE d.request_id = ? 
@@ -122,11 +123,12 @@ class Donation {
             SELECT
                 u.id,
                 CONCAT(u.first_name, ' ', u.last_name) as donor_name,
+                u.profile_picture,
                 SUM(d.amount) as total_donated,
                 COUNT(d.id) as donation_count
             FROM donations d 
             JOIN users u ON d.user_id = u.id 
-            GROUP BY u.id, u.first_name, u.last_name
+            GROUP BY u.id, u.first_name, u.last_name, u.profile_picture
             ORDER BY total_donated DESC 
             LIMIT ?
         ");

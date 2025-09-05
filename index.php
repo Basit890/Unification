@@ -28,7 +28,8 @@ $pageTitles = [
     'profile' => 'My Profile - UNIFICATION',
     'admin' => 'Admin Panel - UNIFICATION',
     'pending_requests' => 'Pending Requests - UNIFICATION',
-    'notifications' => 'Notifications - UNIFICATION'
+    'notifications' => 'Notifications - UNIFICATION',
+    'zakat_calculator' => 'Zakat Calculator - UNIFICATION'
 ];
 
 $pageTitle = $pageTitles[$page] ?? 'UNIFICATION - Crowdfunding Platform';
@@ -63,7 +64,20 @@ switch ($page) {
         break;
         
     case 'view_request':
-        include 'app/views/requests/view.php';
+        $requestId = $_GET['id'] ?? 0;
+        $viewData = $helpRequestController->viewRequest($requestId);
+        
+        if (!$viewData['success']) {
+            $content = '<div class="alert alert-error">' . htmlspecialchars($viewData['message']) . '</div>';
+        } else {
+            // Extract data for the view
+            $request = $viewData['request'];
+            $comments = $viewData['comments'];
+            $status_updates = $viewData['status_updates'];
+            $donations = $viewData['donations'];
+            $progress_percentage = $viewData['progress_percentage'];
+            include 'app/views/requests/view.php';
+        }
         break;
         
     case 'my_requests':
@@ -108,8 +122,33 @@ switch ($page) {
             default:
                 $data = $notificationController->index();
                 extract($data);
-                include 'app/views/notifications/index.php';
+                include 'app/views/notifications/notification_item.php';
                 break;
+        }
+        break;
+        
+    case 'zakat_calculator':
+        if (!Session::isLoggedIn()) {
+            redirect('index.php?page=login');
+        }
+        
+        $zakatController = new ZakatController($userModel);
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $result = $zakatController->calculate($_POST);
+            if ($result['success']) {
+                $calculation = $result['calculation'];
+                include 'app/views/zakat/calculator.php';
+            } else {
+                $error = $result['message'];
+                $data = $zakatController->index();
+                extract($data);
+                include 'app/views/zakat/calculator.php';
+            }
+        } else {
+            $data = $zakatController->index();
+            extract($data);
+            include 'app/views/zakat/calculator.php';
         }
         break;
         
@@ -121,10 +160,20 @@ switch ($page) {
         break;
         
     case 'profile':
-        if (!Session::isLoggedIn()) {
-            redirect('index.php?page=login');
+        $profileController = new ProfileController($userModel, $fileUpload);
+        switch ($action) {
+            case 'update':
+                $profileController->updateProfile();
+                break;
+            case 'delete_picture':
+                $profileController->deleteProfilePicture();
+                break;
+            default:
+                $data = $profileController->index();
+                extract($data);
+                include 'app/views/user/profile.php';
+                break;
         }
-        include 'app/views/user/profile.php';
         break;
         
     case 'admin':

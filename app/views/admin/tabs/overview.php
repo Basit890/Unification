@@ -64,7 +64,7 @@
                 </div>
                 <?php
                 $stmt = $pdo->query("
-                    SELECT hr.*, CONCAT(u.first_name, ' ', u.last_name) as user_name 
+                    SELECT hr.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, u.profile_picture 
                     FROM help_requests hr 
                     JOIN users u ON hr.user_id = u.id 
                     ORDER BY hr.created_at DESC 
@@ -87,7 +87,10 @@
                                 </div>
                                 <div class="activity-info">
                                     <strong><?php echo htmlspecialchars($request['title']); ?></strong>
-                                    <span class="activity-meta">by <?php echo htmlspecialchars($request['user_name']); ?></span>
+                                    <div class="activity-meta">
+                                        <span>by <?php echo htmlspecialchars($request['user_name']); ?></span>
+                                        <?php echo AvatarHelper::render($request['profile_picture'], $request['user_name'], 'sm'); ?>
+                                    </div>
                                     <span class="activity-time"><?php echo date('M j, g:i A', strtotime($request['created_at'])); ?></span>
                                 </div>
                                 <div class="activity-status">

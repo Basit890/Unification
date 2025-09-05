@@ -33,6 +33,12 @@ class User {
         return $stmt->fetch();
     }
     
+    public function findByUsername($username) {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        return $stmt->fetch();
+    }
+    
     public function findById($id) {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->execute([$id]);
@@ -73,8 +79,10 @@ class User {
         $fields = [];
         $values = [];
         
+        $allowedFields = ['first_name', 'last_name', 'email', 'username', 'profile_picture', 'religion', 'is_admin'];
+        
         foreach ($data as $key => $value) {
-            if (in_array($key, ['name', 'email', 'is_admin'])) {
+            if (in_array($key, $allowedFields)) {
                 $fields[] = "$key = ?";
                 $values[] = $value;
             }

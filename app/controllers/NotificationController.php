@@ -27,6 +27,9 @@ class NotificationController {
         $notifications = $this->notificationModel->getForUser($userId);
         $unreadCount = $this->notificationModel->getUnreadCount($userId);
         
+        // Process notifications to add proper redirect URLs
+        $notifications = $this->processNotificationLinks($notifications);
+        
         // Group notifications by type
         $groupedNotifications = $this->groupNotificationsByType($notifications);
         
@@ -63,13 +66,35 @@ class NotificationController {
     
     public function markAllAsRead() {
         if (!Session::isLoggedIn()) {
-            $this->redirect('index.php?page=login');
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Not logged in']);
+            exit();
         }
         
         $userId = Session::getUserId();
-        $this->notificationModel->markAllAsRead($userId);
         
-        $this->redirect('index.php?page=notifications');
+        // Debug: Get count before update
+        $unreadCountBefore = $this->notificationModel->getUnreadCount($userId);
+        
+        $result = $this->notificationModel->markAllAsRead($userId);
+        
+        // Debug: Get count after update
+        $unreadCountAfter = $this->notificationModel->getUnreadCount($userId);
+        
+        if ($result) {
+            http_response_code(200);
+            echo json_encode([
+                'success' => true, 
+                'message' => 'All notifications marked as read',
+                'unread_count_before' => $unreadCountBefore,
+                'unread_count_after' => $unreadCountAfter,
+                'affected_rows' => $unreadCountBefore - $unreadCountAfter
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notifications as read']);
+        }
+        exit();
     }
     
     public function delete() {
@@ -85,6 +110,70 @@ class NotificationController {
         }
         
         $this->redirect('index.php?page=notifications');
+    }
+    
+    private function processNotificationLinks($notifications) {
+        foreach ($notifications as &$notification) {
+            if ($notification['related_id'] && $notification['related_type']) {
+                $notification['redirect_url'] = $this->getNotificationRedirectUrl($notification);
+            }
+        }
+        return $notifications;
+    }
+    
+    private function getNotificationRedirectUrl($notification) {
+        $relatedId = $notification['related_id'];
+        $relatedType = $notification['related_type'];
+        $notificationType = $notification['type'] ?? '';
+        
+        // Default redirect URL
+        $redirectUrl = 'index.php?page=view_request&id=' . $relatedId;
+        
+        if (in_array($relatedType, ['request', 'comment', 'donation'])) {
+            try {
+                $request = $this->helpRequestModel->getById($relatedId);
+                
+                if ($request) {
+                    $isCompleted = in_array($request['status'], ['completed', 'closed']);
+                    if ($isCompleted) {
+                        // For completed posts, redirect to success stories
+                        $redirectUrl = 'index.php?page=success_stories&post_id=' . $relatedId;
+                    } else {
+                        // For active posts, redirect to view request with section anchor
+                        $redirectUrl = $this->getSectionSpecificUrl($relatedId, $notificationType);
+                    }
+                } else {
+                    // Request not found, redirect to home
+                    $redirectUrl = 'index.php?page=home';
+                }
+            } catch (Exception $e) {
+                // If there's an error, redirect to home
+                $redirectUrl = 'index.php?page=home';
+            }
+        }
+        
+        return $redirectUrl;
+    }
+    
+    private function getSectionSpecificUrl($requestId, $notificationType) {
+        $baseUrl = 'index.php?page=view_request&id=' . $requestId;
+        
+        // Add anchor based on notification type
+        switch ($notificationType) {
+            case 'comment':
+                return $baseUrl . '#comments';
+            case 'donation':
+                return $baseUrl . '#donations';
+            case 'update':
+                return $baseUrl . '#updates';
+            case 'approval':
+            case 'rejection':
+                // For approval/rejection, go to the top of the page
+                return $baseUrl;
+            default:
+                // For other types, go to the top of the page
+                return $baseUrl;
+        }
     }
     
     private function redirect($url) {
@@ -105,8 +194,8 @@ class NotificationController {
                         'type' => 'comment',
                         'title' => 'New Comment on Your Request',
                         'message' => htmlspecialchars($comment['user_name']) . ' commented on your request: "' . htmlspecialchars($request['title']) . '"',
-                        'related_id' => $commentId,
-                        'related_type' => 'comment'
+                        'related_id' => $requestId, // Changed from $commentId to $requestId for proper linking
+                        'related_type' => 'request'
                     ]);
                 }
                 
@@ -130,8 +219,8 @@ class NotificationController {
                     'type' => 'donation',
                     'title' => 'New Donation Received',
                     'message' => 'You received a donation of ৳' . number_format($donation['amount'], 2) . ' for your request: "' . htmlspecialchars($request['title']) . '"',
-                    'related_id' => $donationId,
-                    'related_type' => 'donation'
+                    'related_id' => $requestId, // Changed from $donationId to $requestId for proper linking
+                    'related_type' => 'request'
                 ]);
                 
                 // Notify all other donors who donated to this request (except the current donor)
