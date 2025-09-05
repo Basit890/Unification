@@ -30,7 +30,12 @@ class NotificationController {
         // Group notifications by type
         $groupedNotifications = $this->groupNotificationsByType($notifications);
         
-        include 'app/views/notifications/index.php';
+        return [
+            'user' => $user,
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount,
+            'groupedNotifications' => $groupedNotifications
+        ];
     }
     
     public function markAsRead() {
@@ -92,15 +97,21 @@ class NotificationController {
             $comment = $this->commentModel->getById($commentId);
             $request = $this->helpRequestModel->getById($requestId);
             
-            if ($comment && $request && $comment['user_id'] != $request['user_id']) {
-                $this->notificationModel->create([
-                    'user_id' => $request['user_id'],
-                    'type' => 'comment',
-                    'title' => 'New Comment on Your Request',
-                    'message' => htmlspecialchars($comment['user_name']) . ' commented on your request: "' . htmlspecialchars($request['title']) . '"',
-                    'related_id' => $commentId,
-                    'related_type' => 'comment'
-                ]);
+            if ($comment && $request) {
+                // Notify the fundraiser (if not the commenter)
+                if ($comment['user_id'] != $request['user_id']) {
+                    $this->notificationModel->create([
+                        'user_id' => $request['user_id'],
+                        'type' => 'comment',
+                        'title' => 'New Comment on Your Request',
+                        'message' => htmlspecialchars($comment['user_name']) . ' commented on your request: "' . htmlspecialchars($request['title']) . '"',
+                        'related_id' => $commentId,
+                        'related_type' => 'comment'
+                    ]);
+                }
+                
+                // Notify all donors who donated to this request (except the commenter)
+                $this->notifyDonorsAboutComment($commentId, $requestId, $comment['user_id']);
             }
         } catch (Exception $e) {
             error_log("Error creating comment notification: " . $e->getMessage());
@@ -113,6 +124,7 @@ class NotificationController {
             $request = $this->helpRequestModel->getById($requestId);
             
             if ($donation && $request) {
+                // Notify the fundraiser
                 $this->notificationModel->create([
                     'user_id' => $request['user_id'],
                     'type' => 'donation',
@@ -121,6 +133,9 @@ class NotificationController {
                     'related_id' => $donationId,
                     'related_type' => 'donation'
                 ]);
+                
+                // Notify all other donors who donated to this request (except the current donor)
+                $this->notifyDonorsAboutDonation($donationId, $requestId, $donation['user_id']);
             }
         } catch (Exception $e) {
             error_log("Error creating donation notification: " . $e->getMessage());
@@ -135,6 +150,7 @@ class NotificationController {
                 $adminName = $adminId ? $this->userModel->findById($adminId)['first_name'] : 'Admin';
                 
                 if ($status === 'approved') {
+                    // Notify the fundraiser
                     $this->notificationModel->create([
                         'user_id' => $request['user_id'],
                         'type' => 'approval',
@@ -143,7 +159,11 @@ class NotificationController {
                         'related_id' => $requestId,
                         'related_type' => 'request'
                     ]);
+                    
+                    // Notify all donors who donated to this request
+                    $this->notifyDonorsAboutStatusUpdate($requestId, 'approved', $adminName);
                 } elseif ($status === 'rejected') {
+                    // Notify the fundraiser
                     $this->notificationModel->create([
                         'user_id' => $request['user_id'],
                         'type' => 'rejection',
@@ -152,6 +172,9 @@ class NotificationController {
                         'related_id' => $requestId,
                         'related_type' => 'request'
                     ]);
+                    
+                    // Notify all donors who donated to this request
+                    $this->notifyDonorsAboutStatusUpdate($requestId, 'rejected', $adminName);
                 }
             }
         } catch (Exception $e) {
@@ -187,29 +210,58 @@ class NotificationController {
             'comments' => [],
             'donations' => [],
             'approvals' => [],
+            'updates' => [],
             'admin' => []
         ];
         
+        // Sort notifications by created_at (newest first)
+        usort($notifications, function($a, $b) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
+        
         foreach ($notifications as $notification) {
+            $isRecent = (time() - strtotime($notification['created_at'])) < 3600; // Less than 1 hour old
+            
             switch ($notification['type']) {
                 case 'comment':
                     $grouped['comments'][] = $notification;
+                    if ($isRecent) {
+                        $grouped['recent'][] = $notification;
+                    }
                     break;
                 case 'donation':
                     $grouped['donations'][] = $notification;
+                    if ($isRecent) {
+                        $grouped['recent'][] = $notification;
+                    }
                     break;
                 case 'approval':
                 case 'rejection':
                     $grouped['approvals'][] = $notification;
+                    if ($isRecent) {
+                        $grouped['recent'][] = $notification;
+                    }
+                    break;
+                case 'update':
+                    $grouped['updates'][] = $notification;
+                    if ($isRecent) {
+                        $grouped['recent'][] = $notification;
+                    }
                     break;
                 case 'admin_request':
                     $grouped['admin'][] = $notification;
+                    if ($isRecent) {
+                        $grouped['recent'][] = $notification;
+                    }
                     break;
                 default:
                     $grouped['recent'][] = $notification;
                     break;
             }
         }
+        
+        // Remove duplicates from recent (in case a notification appears in both recent and its category)
+        $grouped['recent'] = array_unique($grouped['recent'], SORT_REGULAR);
         
         return $grouped;
     }
@@ -221,5 +273,114 @@ class NotificationController {
         
         $userId = Session::getUserId();
         return $this->notificationModel->getForUser($userId, $limit);
+    }
+    
+    private function notifyDonorsAboutComment($commentId, $requestId, $excludeUserId) {
+        try {
+            $comment = $this->commentModel->getById($commentId);
+            $request = $this->helpRequestModel->getById($requestId);
+            
+            if ($comment && $request) {
+                $donorIds = $this->donationModel->getDonorIdsByRequestId($requestId);
+                
+                foreach ($donorIds as $donorId) {
+                    // Skip the commenter and the fundraiser
+                    if ($donorId != $excludeUserId && $donorId != $request['user_id']) {
+                        $this->notificationModel->create([
+                            'user_id' => $donorId,
+                            'type' => 'comment',
+                            'title' => 'New Comment on Donated Post',
+                            'message' => htmlspecialchars($comment['user_name']) . ' commented on "' . htmlspecialchars($request['title']) . '" that you donated to',
+                            'related_id' => $commentId,
+                            'related_type' => 'comment'
+                        ]);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error creating donor comment notification: " . $e->getMessage());
+        }
+    }
+    
+    private function notifyDonorsAboutDonation($donationId, $requestId, $excludeUserId) {
+        try {
+            $donation = $this->donationModel->getById($donationId);
+            $request = $this->helpRequestModel->getById($requestId);
+            
+            if ($donation && $request) {
+                $donorIds = $this->donationModel->getDonorIdsByRequestId($requestId);
+                
+                foreach ($donorIds as $donorId) {
+                    // Skip the current donor and the fundraiser
+                    if ($donorId != $excludeUserId && $donorId != $request['user_id']) {
+                        $this->notificationModel->create([
+                            'user_id' => $donorId,
+                            'type' => 'donation',
+                            'title' => 'New Donation on Your Post',
+                            'message' => 'Someone donated ৳' . number_format($donation['amount'], 2) . ' to "' . htmlspecialchars($request['title']) . '" that you also donated to',
+                            'related_id' => $donationId,
+                            'related_type' => 'donation'
+                        ]);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error creating donor donation notification: " . $e->getMessage());
+        }
+    }
+    
+    private function notifyDonorsAboutStatusUpdate($requestId, $status, $adminName) {
+        try {
+            $request = $this->helpRequestModel->getById($requestId);
+            
+            if ($request) {
+                $donorIds = $this->donationModel->getDonorIdsByRequestId($requestId);
+                
+                foreach ($donorIds as $donorId) {
+                    // Skip the fundraiser
+                    if ($donorId != $request['user_id']) {
+                        $title = $status === 'approved' ? 'Post You Donated To Was Approved' : 'Post You Donated To Was Rejected';
+                        $message = 'The post "' . htmlspecialchars($request['title']) . '" that you donated to has been ' . $status . ' by ' . $adminName;
+                        
+                        $this->notificationModel->create([
+                            'user_id' => $donorId,
+                            'type' => $status === 'approved' ? 'approval' : 'rejection',
+                            'title' => $title,
+                            'message' => $message,
+                            'related_id' => $requestId,
+                            'related_type' => 'request'
+                        ]);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error creating donor status notification: " . $e->getMessage());
+        }
+    }
+    
+    public function notifyDonorsAboutPostUpdate($requestId, $updateText) {
+        try {
+            $request = $this->helpRequestModel->getById($requestId);
+            
+            if ($request) {
+                $donorIds = $this->donationModel->getDonorIdsByRequestId($requestId);
+                
+                foreach ($donorIds as $donorId) {
+                    // Skip the fundraiser
+                    if ($donorId != $request['user_id']) {
+                        $this->notificationModel->create([
+                            'user_id' => $donorId,
+                            'type' => 'update',
+                            'title' => 'Post Update',
+                            'message' => 'The fundraiser added an update to "' . htmlspecialchars($request['title']) . '" that you donated to',
+                            'related_id' => $requestId,
+                            'related_type' => 'request'
+                        ]);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error creating donor post update notification: " . $e->getMessage());
+        }
     }
 }

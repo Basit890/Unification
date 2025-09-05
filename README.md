@@ -185,7 +185,7 @@ This is a **private project** and is not licensed for public use, distribution, 
 ## 🆘 Support
 
 For support and questions regarding this private platform:
-- Contact the development team directly
+- Contact the developer directly
 - Check the documentation in the code comments
 - Review the configuration files for setup guidance
 

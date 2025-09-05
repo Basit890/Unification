@@ -1,4 +1,4 @@
-<div class="notification-item <?php echo $notification['is_read'] ? 'read' : 'unread'; ?>" 
+<div class="notification-item <?php echo $notification['is_read'] ? 'read' : 'unread'; ?> notification-<?php echo $notification['type']; ?>" 
      data-notification-id="<?php echo $notification['id']; ?>">
     
     <div class="notification-icon">
@@ -22,6 +22,10 @@
             case 'rejection':
                 $iconClass = 'fas fa-times-circle';
                 $iconColor = '#e74c3c';
+                break;
+            case 'update':
+                $iconClass = 'fas fa-edit';
+                $iconColor = '#9b59b6';
                 break;
             case 'admin_request':
                 $iconClass = 'fas fa-shield-alt';

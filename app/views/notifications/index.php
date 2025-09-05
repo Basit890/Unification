@@ -1,4 +1,4 @@
-<div class="notifications-container">
+<div class="notifications-container notifications-<?php echo $user['user_type']; ?>">
     <div class="notifications-header">
         <div class="header-content">
             <div class="header-icon">
@@ -7,8 +7,16 @@
                 </div>
             </div>
             <div class="header-text">
-                <h1>Notifications</h1>
-                <p class="header-subtitle">Stay updated with your latest activities and updates</p>
+                <h1><?php echo ucfirst($user['user_type']); ?> Notifications</h1>
+                <p class="header-subtitle">
+                    <?php if ($user['user_type'] === 'admin'): ?>
+                        Monitor platform activities, manage requests, and oversee user interactions
+                    <?php elseif ($user['user_type'] === 'fundraiser'): ?>
+                        Track your help requests, donor interactions, and request status updates
+                    <?php else: ?>
+                        Stay updated with your donation activities and platform interactions
+                    <?php endif; ?>
+                </p>
             </div>
         </div>
         
@@ -39,7 +47,15 @@
             </div>
             <div class="empty-content">
                 <h3>All Caught Up!</h3>
-                <p>You have no new notifications at the moment. New updates will appear here when you receive comments, donations, or other important updates.</p>
+                <p>
+                    <?php if ($user['user_type'] === 'admin'): ?>
+                        You have no new notifications at the moment. New updates will appear here when there are pending requests, user activities, or platform events that need your attention.
+                    <?php elseif ($user['user_type'] === 'fundraiser'): ?>
+                        You have no new notifications at the moment. New updates will appear here when you receive comments, donations, or status updates on your help requests.
+                    <?php else: ?>
+                        You have no new notifications at the moment. New updates will appear here when you receive updates about your donations or other platform activities.
+                    <?php endif; ?>
+                </p>
             </div>
         </div>
     <?php else: ?>
@@ -69,7 +85,15 @@
                         <div class="section-icon">
                             <i class="fas fa-comments"></i>
                         </div>
-                        <h2 class="section-title">Comments</h2>
+                        <h2 class="section-title">
+                            <?php if ($user['user_type'] === 'admin'): ?>
+                                Platform Comments
+                            <?php elseif ($user['user_type'] === 'fundraiser'): ?>
+                                Comments on Your Requests
+                            <?php else: ?>
+                                Comments on Your Donations
+                            <?php endif; ?>
+                        </h2>
                         <span class="section-count"><?php echo count($groupedNotifications['comments']); ?></span>
                     </div>
                     <div class="notification-list">
@@ -87,7 +111,15 @@
                         <div class="section-icon">
                             <i class="fas fa-heart"></i>
                         </div>
-                        <h2 class="section-title">Donations</h2>
+                        <h2 class="section-title">
+                            <?php if ($user['user_type'] === 'admin'): ?>
+                                Platform Donations
+                            <?php elseif ($user['user_type'] === 'fundraiser'): ?>
+                                Donations to Your Requests
+                            <?php else: ?>
+                                Your Donations
+                            <?php endif; ?>
+                        </h2>
                         <span class="section-count"><?php echo count($groupedNotifications['donations']); ?></span>
                     </div>
                     <div class="notification-list">
@@ -99,13 +131,46 @@
             <?php endif; ?>
 
             
-            <?php if (!empty($groupedNotifications['approvals'])): ?>
+            <?php if (!empty($groupedNotifications['updates'])): ?>
                 <div class="notification-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <h2 class="section-title">
+                            <?php if ($user['user_type'] === 'admin'): ?>
+                                Post Updates
+                            <?php elseif ($user['user_type'] === 'fundraiser'): ?>
+                                Your Post Updates
+                            <?php else: ?>
+                                Updates on Your Donated Posts
+                            <?php endif; ?>
+                        </h2>
+                        <span class="section-count"><?php echo count($groupedNotifications['updates']); ?></span>
+                    </div>
+                    <div class="notification-list">
+                        <?php foreach ($groupedNotifications['updates'] as $notification): ?>
+                            <?php include 'notification_item.php'; ?>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!empty($groupedNotifications['approvals'])): ?>
+                <div class="notification-section <?php echo $user['user_type'] === 'fundraiser' ? 'fundraiser-section' : ''; ?>">
                     <div class="section-header">
                         <div class="section-icon">
                             <i class="fas fa-clipboard-check"></i>
                         </div>
-                        <h2 class="section-title">Request Updates</h2>
+                        <h2 class="section-title">
+                            <?php if ($user['user_type'] === 'admin'): ?>
+                                Request Status Updates
+                            <?php elseif ($user['user_type'] === 'fundraiser'): ?>
+                                Your Request Updates
+                            <?php else: ?>
+                                Request Updates
+                            <?php endif; ?>
+                        </h2>
                         <span class="section-count"><?php echo count($groupedNotifications['approvals']); ?></span>
                     </div>
                     <div class="notification-list">
@@ -116,14 +181,13 @@
                 </div>
             <?php endif; ?>
 
-            
             <?php if (!empty($groupedNotifications['admin']) && $user['user_type'] === 'admin'): ?>
-                <div class="notification-section">
+                <div class="notification-section admin-section">
                     <div class="section-header">
                         <div class="section-icon">
                             <i class="fas fa-shield-alt"></i>
                         </div>
-                        <h2 class="section-title">Admin Notifications</h2>
+                        <h2 class="section-title">Admin Alerts</h2>
                         <span class="section-count"><?php echo count($groupedNotifications['admin']); ?></span>
                     </div>
                     <div class="notification-list">

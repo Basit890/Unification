@@ -106,7 +106,9 @@ switch ($page) {
                 $notificationController->delete();
                 break;
             default:
-                $notificationController->index();
+                $data = $notificationController->index();
+                extract($data);
+                include 'app/views/notifications/index.php';
                 break;
         }
         break;

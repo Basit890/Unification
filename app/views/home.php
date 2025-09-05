@@ -28,23 +28,22 @@ if ($category_filter && !empty($category_filter)) {
 }
 ?>
 
-<div style="text-align: center; margin-bottom: 3rem;">
-    <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Welcome to Community Help</h1>
-    <p style="font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto;">Help others achieve their goals or get support for your own cause. Together, we can make a difference!</p>
+<div class="home-hero">
+    <h1 class="hero-title">Welcome to Community Help</h1>
+    <p class="hero-subtitle">Help others achieve their goals or get support for your own cause. Together, we can make a difference!</p>
     
-    
-    <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;">
-        <div style="text-align: center; padding: 1rem;">
-            <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);"><?php echo count($allRequests); ?></div>
-            <div style="color: var(--text-light);">Active Campaigns</div>
+    <div class="home-stats">
+        <div class="home-stat">
+            <div class="stat-number"><?php echo count($allRequests); ?></div>
+            <div class="stat-label">Active Campaigns</div>
         </div>
-        <div style="text-align: center; padding: 1rem;">
-            <div style="font-size: 2rem; font-weight: bold; color: var(--accent-color);"><?php echo count($categories); ?></div>
-            <div style="color: var(--text-light);">Categories</div>
+        <div class="home-stat">
+            <div class="stat-number"><?php echo count($categories); ?></div>
+            <div class="stat-label">Categories</div>
         </div>
-        <div style="text-align: center; padding: 1rem;">
-            <div style="font-size: 2rem; font-weight: bold; color: var(--secondary-color);">100%</div>
-            <div style="color: var(--text-light);">Community Driven</div>
+        <div class="home-stat">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Community Driven</div>
         </div>
     </div>
 </div>

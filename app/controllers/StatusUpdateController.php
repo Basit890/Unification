@@ -35,6 +35,8 @@ class StatusUpdateController {
         }
         
         if ($this->statusUpdateModel->create($requestId, $updateText)) {
+            // Notify donors about the status update
+            $this->notifyDonorsAboutStatusUpdate($requestId, $updateText);
             return ['success' => true, 'message' => 'Status update added successfully!'];
         } else {
             return ['success' => false, 'message' => 'Failed to add status update.'];
@@ -54,6 +56,29 @@ class StatusUpdateController {
             return ['success' => true, 'message' => 'Status update deleted successfully!'];
         } else {
             return ['success' => false, 'message' => 'Failed to delete status update.'];
+        }
+    }
+    
+    private function notifyDonorsAboutStatusUpdate($requestId, $updateText) {
+        try {
+            global $pdo;
+            $notificationController = new NotificationController($pdo);
+            $donationModel = new Donation($pdo);
+            $helpRequestModel = new HelpRequest($pdo);
+            
+            $request = $helpRequestModel->getById($requestId);
+            if ($request) {
+                $donorIds = $donationModel->getDonorIdsByRequestId($requestId);
+                
+                foreach ($donorIds as $donorId) {
+                    // Skip the fundraiser
+                    if ($donorId != $request['user_id']) {
+                        $notificationController->notifyDonorsAboutPostUpdate($requestId, $updateText);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error creating status update notification: " . $e->getMessage());
         }
     }
 } 

@@ -55,6 +55,16 @@ class Donation {
         return $stmt->fetchAll();
     }
     
+    public function getDonorIdsByRequestId($requestId) {
+        $stmt = $this->db->prepare("
+            SELECT DISTINCT user_id 
+            FROM donations 
+            WHERE request_id = ?
+        ");
+        $stmt->execute([$requestId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+    
     public function getAll() {
         $stmt = $this->db->prepare("
             SELECT d.*, CONCAT(u.first_name, ' ', u.last_name) as donor_name, hr.title as request_title 
